@@ -5,11 +5,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Text Adventure</title>
-  <script src="build.js"></script>
+  <script src="build.js" async></script>
+  <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 </head>
 
 <body>
-  
+  <div class="grid-container">
+    <div id="console" class="console-Area"></div>
+    <div class="cityPlan-Area">
+      <img src="../src/assets/img/cityPlan.png" alt="cityPlan" width="100%" height="auto">
+    </div>
+    <div class="userInput-Area">
+      <input id="inputField" class="input-field" type="text" value="">
+    </div>
+  </div>
 </body>
 
 </html>

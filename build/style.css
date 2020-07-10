@@ -1,0 +1,36 @@
+body{
+    margin: 0;
+}
+.grid-container {
+    height: 100vh;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-areas: 
+    "console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area" 
+    "console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area" 
+    "console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area" 
+    "userInput-Area userInput-Area  userInput-Area  cityPlan-Area   cityPlan-Area";
+}
+
+.console-Area {
+    grid-area: console-Area;
+    overflow: auto;
+    background-color: white;
+    margin: 8px 0 0 8px; /*top right bottom left*/ 
+}
+
+.cityPlan-Area {
+    grid-area: cityPlan-Area;
+    background-color: antiquewhite;
+}
+
+.userInput-Area {
+    grid-area: userInput-Area;
+    background-color: #dddddd;
+}
+
+.input-field{
+    margin: 2% 0 0 2%; /*top right bottom left*/ 
+    width: 80%;
+}
