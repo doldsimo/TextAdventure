@@ -1,6 +1,16 @@
 "use strict";
 var textAdventure;
 (function (textAdventure) {
+    load("data/crossroads/allCrossroads.json").then();
+    async function load(_path) {
+        let response = await fetch(_path);
+        // tslint:disable-next-line: no-any
+        let json = await response.json();
+        console.log(json);
+    }
+})(textAdventure || (textAdventure = {}));
+var textAdventure;
+(function (textAdventure) {
     checkUserInput();
     function checkUserInput() {
         let inputField = document.getElementById("inputField");
