@@ -1,56 +1,322 @@
 [
-    {
-        "name": "A",
-        "description": "Das ist der Knoten A",
-        "characters": [],
-        "neighborsAround": []
-    },
-    {
-        "name": "B",
-        "description": "Das ist der Knoten B",
-        "characters": [],
-        "neighborsAround": []
-    },
-    {
-        "name": "C",
-        "description": "Das ist der Knoten C",
-        "characters": [],
-        "neighborsAround": []
-    },
-    {
-        "name": "D",
-        "description": "Das ist der Knoten D",
-        "characters": [],
-        "neighborsAround": []
-    },
-    {
-        "name": "E",
-        "description": "Das ist der Knoten E",
-        "characters": [],
-        "neighborsAround": []
-    },
-    {
-        "name": "F",
-        "description": "Das ist der Knoten F",
-        "characters": [],
-        "neighborsAround": []
-    },
-    {
-        "name": "G",
-        "description": "Das ist der Knoten G",
-        "characters": [],
-        "neighborsAround": []
-    },
-    {
-        "name": "H",
-        "description": "Das ist der Knoten H",
-        "characters": [],
-        "neighborsAround": []
-    },
-    {
-        "name": "I",
-        "description": "Das ist der Knoten I",
-        "characters": [],
-        "neighborsAround": []
-    }
+	{
+		"name": "User",
+		"items": [
+			{
+				"name": "20000 Euro"
+			}
+		],
+		"currentRoom": "Bank",
+		"health": 100
+	},
+	{
+		"name": "A",
+		"description": "Das ist der Knoten A",
+		"characters": [],
+		"items": [
+			{
+				"name": "100 Euro"
+			},
+			{
+				"name": "Stein"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": null
+			},
+			{
+				"right": "B"
+			},
+			{
+				"up": null
+			},
+			{
+				"down": "Baustelle"
+			}
+		]
+	},
+	{
+		"name": "B",
+		"description": "Das ist der Knoten B",
+		"characters": [],
+		"items": [
+			{
+				"name": "5 Euro"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": "A"
+			},
+			{
+				"right": "C"
+			},
+			{
+				"up": "Garage"
+			},
+			{
+				"down": "D"
+			}
+		]
+	},
+	{
+		"name": "C",
+		"description": "Das ist der Knoten C",
+		"characters": [
+			{
+				"type": "Passant",
+				"name": "Peter",
+				"text": "Hallo ich bin Peter"
+			}
+		],
+		"items": [
+			{
+				"name": "Papier"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": "B"
+			},
+			{
+				"right": null
+			},
+			{
+				"up": null
+			},
+			{
+				"down": "F"
+			}
+		]
+	},
+	{
+		"name": "D",
+		"description": "Das ist der Knoten D",
+		"characters": [
+			{
+				"type": "Polizei",
+				"name": "Klaus",
+				"text": "Hallo ich bin der Polizist Klaus"
+			}
+		],
+		"items": [
+			{
+				"name": "Stift"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": "Polizeiwache"
+			},
+			{
+				"right": "E"
+			},
+			{
+				"up": "Baustelle"
+			},
+			{
+				"down": "G"
+			}
+		]
+	},
+	{
+		"name": "E",
+		"description": "Das ist der Knoten E",
+		"characters": [
+			{
+				"type": "Polizei",
+				"name": "Ludwig",
+				"text": "Hallo ich bin der Polizist Ludwig und du kommst hier nicht vorbei!"
+			}
+		],
+		"items": [
+			{
+				"name": "Schere"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": "D"
+			},
+			{
+				"right": "F"
+			},
+			{
+				"up": "B"
+			},
+			{
+				"down": "H"
+			}
+		]
+	},
+	{
+		"name": "F",
+		"description": "Das ist der Knoten F",
+		"characters": [],
+		"items": [
+			{
+				"name": "Schokolade"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": "E"
+			},
+			{
+				"right": "Apotheke"
+			},
+			{
+				"up": "C"
+			},
+			{
+				"down": "I"
+			}
+		]
+	},
+	{
+		"name": "G",
+		"description": "Das ist der Knoten G",
+		"characters": [],
+		"items": [
+			{
+				"name": "Garagenschlüssel"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": null
+			},
+			{
+				"right": "H"
+			},
+			{
+				"up": "D"
+			},
+			{
+				"down": null
+			}
+		]
+	},
+	{
+		"name": "H",
+		"description": "Das ist der Knoten H",
+		"characters": [],
+		"items": [
+			{
+				"name": "Stock"
+			},
+			{
+				"name": "Flasche"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": "G"
+			},
+			{
+				"right": "I"
+			},
+			{
+				"up": "E"
+			},
+			{
+				"down": "Bank"
+			}
+		]
+	},
+	{
+		"name": "I",
+		"description": "Das ist der Knoten I",
+		"characters": [],
+		"items": [
+			{
+				"name": "Autoschlüssel"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": "H"
+			},
+			{
+				"right": null
+			},
+			{
+				"up": "F"
+			},
+			{
+				"down": null
+			}
+		]
+	},
+	{
+		"name": "Bank",
+		"description": "Das ist die Bank",
+		"characters": [],
+		"items": [],
+		"neighborsAround": [
+			{
+				"left": null
+			},
+			{
+				"right": null
+			},
+			{
+				"up": "H"
+			},
+			{
+				"down": null
+			}
+		]
+	},
+	{
+		"name": "Polizeiwache",
+		"description": "Das ist die Polizeiwache",
+		"characters": [],
+		"items": [],
+		"neighborsAround": []
+	},
+	{
+		"name": "Apotheke",
+		"description": "Das ist die Apotheke",
+		"characters": [
+			{
+				"type": "Verkäufer",
+				"name": "Lena",
+				"text": "Hallo ich bin Lena was möchtest du kaufen?"
+			}
+		],
+		"items": [
+			{
+				"name": "Verband"
+			},
+			{
+				"name": "Hustensaft"
+			},
+			{
+				"name": "Spritze"
+			}
+		],
+		"neighborsAround": [
+			{
+				"left": "F"
+			},
+			{
+				"right": null
+			},
+			{
+				"up": null
+			},
+			{
+				"down": null
+			}
+		]
+	},
+	{
+		"name": "Garage",
+		"description": "Das ist die Garage",
+		"characters": [],
+		"items": [],
+		"neighborsAround": []
+	}
 ]
