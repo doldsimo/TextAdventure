@@ -2,6 +2,8 @@ namespace textAdventure {
     let gameSequenz: number = 0;
     let gameContent: any = [];
 
+    // let Persons: Person[] = [];
+
     loadJsonData();
 
     export function startProgram(_content: JSONObject): void {
@@ -28,7 +30,7 @@ namespace textAdventure {
         // Das Spiel startet im ersten Raum  
         else if (gameSequenz === 1) {
             // Setzt Spielername in der JSON-Datei
-            gameContent[0].name = _userInput;
+            gameContent.User.name = _userInput;
             printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
             let timerNumber: number = 3;
             let refreshIntervalId: number = setInterval(function (): void {
@@ -39,10 +41,14 @@ namespace textAdventure {
                 // tslint:disable-next-line: align
             }, 700);
             setTimeout(function (): void {
+
+                gameSequenz++;
                 printOutput("Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich!");
                 // tslint:disable-next-line: align
             }, 2800);
-            gameSequenz++;
+            let bank: Building = new Building(gameContent.Bank.name, gameContent.Bank.description, gameContent.Bank.person, gameContent.Bank.item, gameContent.Bank.neighbour);
+            console.log(bank);
+
         } else if (gameSequenz === 2) {
 
             switch (_userInput) {

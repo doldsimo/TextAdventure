@@ -1,7 +1,7 @@
-[
-	{
+{
+	"User": {
 		"name": "User",
-		"items": [
+		"item": [
 			{
 				"name": "20000 Euro"
 			}
@@ -9,11 +9,11 @@
 		"currentRoom": "Bank",
 		"health": 100
 	},
-	{
+	"A": {
 		"name": "A",
 		"description": "Das ist der Knoten A",
-		"characters": [],
-		"items": [
+		"person": [],
+		"item": [
 			{
 				"name": "100 Euro"
 			},
@@ -21,188 +21,185 @@
 				"name": "Stein"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": null
+				"west": null
 			},
 			{
-				"right": "B"
+				"east": "B"
 			},
 			{
-				"up": null
+				"north": null
 			},
 			{
-				"down": "Baustelle"
+				"south": "Baustelle"
 			}
 		]
 	},
-	{
+	"B": {
 		"name": "B",
 		"description": "Das ist der Knoten B",
-		"characters": [],
-		"items": [
+		"person": [],
+		"item": [
 			{
 				"name": "5 Euro"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": "A"
+				"west": "A"
 			},
 			{
-				"right": "C"
+				"east": "C"
 			},
 			{
-				"up": "Garage"
+				"north": "Garage"
 			},
 			{
-				"down": "D"
+				"south": "D"
 			}
 		]
 	},
-	{
+	"C": {
 		"name": "C",
 		"description": "Das ist der Knoten C",
-		"characters": [
+		"person": [
 			{
-				"type": "Passant",
 				"name": "Peter",
 				"text": "Hallo ich bin Peter"
 			}
 		],
-		"items": [
+		"item": [
 			{
 				"name": "Papier"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": "B"
+				"west": "B"
 			},
 			{
-				"right": null
+				"east": null
 			},
 			{
-				"up": null
+				"north": null
 			},
 			{
-				"down": "F"
+				"south": "F"
 			}
 		]
 	},
-	{
+	"D": {
 		"name": "D",
 		"description": "Das ist der Knoten D",
-		"characters": [
+		"person": [
 			{
-				"type": "Polizei",
 				"name": "Klaus",
 				"text": "Hallo ich bin der Polizist Klaus"
 			}
 		],
-		"items": [
+		"item": [
 			{
 				"name": "Stift"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": "Polizeiwache"
+				"west": "Polizeiwache"
 			},
 			{
-				"right": "E"
+				"east": "E"
 			},
 			{
-				"up": "Baustelle"
+				"north": "Baustelle"
 			},
 			{
-				"down": "G"
+				"south": "G"
 			}
 		]
 	},
-	{
+	"E": {
 		"name": "E",
 		"description": "Das ist der Knoten E",
-		"characters": [
+		"person": [
 			{
-				"type": "Polizei",
 				"name": "Ludwig",
 				"text": "Hallo ich bin der Polizist Ludwig und du kommst hier nicht vorbei!"
 			}
 		],
-		"items": [
+		"item": [
 			{
 				"name": "Schere"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": "D"
+				"west": "D"
 			},
 			{
-				"right": "F"
+				"east": "F"
 			},
 			{
-				"up": "B"
+				"north": "B"
 			},
 			{
-				"down": "H"
+				"south": "H"
 			}
 		]
 	},
-	{
+	"F": {
 		"name": "F",
 		"description": "Das ist der Knoten F",
-		"characters": [],
-		"items": [
+		"person": [],
+		"item": [
 			{
 				"name": "Schokolade"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": "E"
+				"west": "E"
 			},
 			{
-				"right": "Apotheke"
+				"east": "Apotheke"
 			},
 			{
-				"up": "C"
+				"north": "C"
 			},
 			{
-				"down": "I"
+				"south": "I"
 			}
 		]
 	},
-	{
+	"G": {
 		"name": "G",
 		"description": "Das ist der Knoten G",
-		"characters": [],
-		"items": [
+		"person": [],
+		"item": [
 			{
 				"name": "Garagenschlüssel"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": null
+				"west": null
 			},
 			{
-				"right": "H"
+				"east": "H"
 			},
 			{
-				"up": "D"
+				"north": "D"
 			},
 			{
-				"down": null
+				"south": null
 			}
 		]
 	},
-	{
+	"H": {
 		"name": "H",
 		"description": "Das ist der Knoten H",
-		"characters": [],
-		"items": [
+		"person": [],
+		"item": [
 			{
 				"name": "Stock"
 			},
@@ -210,83 +207,79 @@
 				"name": "Flasche"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": "G"
+				"west": "G"
 			},
 			{
-				"right": "I"
+				"east": "I"
 			},
 			{
-				"up": "E"
+				"north": "E"
 			},
 			{
-				"down": "Bank"
+				"south": "Bank"
 			}
 		]
 	},
-	{
+	"I": {
 		"name": "I",
 		"description": "Das ist der Knoten I",
-		"characters": [],
-		"items": [
+		"person": [],
+		"item": [
 			{
 				"name": "Autoschlüssel"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": "H"
+				"west": "H"
 			},
 			{
-				"right": null
+				"east": null
 			},
 			{
-				"up": "F"
+				"north": "F"
 			},
 			{
-				"down": null
+				"south": null
 			}
 		]
 	},
-	{
+	"Bank": {
 		"name": "Bank",
 		"description": "Das ist die Bank",
-		"characters": [],
-		"items": [],
-		"neighborsAround": [
+		"person": [],
+		"item": [
 			{
-				"left": null
+				"name": "Zange"
 			},
 			{
-				"right": null
+				"name": "Getränk"
 			},
 			{
-				"up": "H"
-			},
-			{
-				"down": null
+				"name": "Papier"
 			}
-		]
+		],
+		"neighbour": ["H", "null", "null", "null"]
 	},
-	{
+	"Polizeiwache": {
 		"name": "Polizeiwache",
 		"description": "Das ist die Polizeiwache",
-		"characters": [],
-		"items": [],
-		"neighborsAround": []
+		"person": [],
+		"item": [],
+		"neighbour": []
 	},
-	{
+	"Apotheke": {
 		"name": "Apotheke",
 		"description": "Das ist die Apotheke",
-		"characters": [
+		"person": [
 			{
-				"type": "Verkäufer",
 				"name": "Lena",
 				"text": "Hallo ich bin Lena was möchtest du kaufen?"
 			}
 		],
-		"items": [
+		"item": [
 			{
 				"name": "Verband"
 			},
@@ -297,26 +290,26 @@
 				"name": "Spritze"
 			}
 		],
-		"neighborsAround": [
+		"neighbour": [
 			{
-				"left": "F"
+				"west": "F"
 			},
 			{
-				"right": null
+				"east": null
 			},
 			{
-				"up": null
+				"north": null
 			},
 			{
-				"down": null
+				"south": null
 			}
 		]
 	},
-	{
+	"Garage": {
 		"name": "Garage",
 		"description": "Das ist die Garage",
-		"characters": [],
-		"items": [],
-		"neighborsAround": []
+		"person": [],
+		"item": [],
+		"neighbour": []
 	}
-]
+}

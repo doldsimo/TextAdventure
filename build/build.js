@@ -37,6 +37,7 @@ var textAdventure;
 (function (textAdventure) {
     let gameSequenz = 0;
     let gameContent = [];
+    // let Persons: Person[] = [];
     textAdventure.loadJsonData();
     function startProgram(_content) {
         gameContent = _content;
@@ -62,7 +63,7 @@ var textAdventure;
         // Das Spiel startet im ersten Raum  
         else if (gameSequenz === 1) {
             // Setzt Spielername in der JSON-Datei
-            gameContent[0].name = _userInput;
+            gameContent.User.name = _userInput;
             printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
             let timerNumber = 3;
             let refreshIntervalId = setInterval(function () {
@@ -73,10 +74,12 @@ var textAdventure;
                 // tslint:disable-next-line: align
             }, 700);
             setTimeout(function () {
+                gameSequenz++;
                 printOutput("Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich!");
                 // tslint:disable-next-line: align
             }, 2800);
-            gameSequenz++;
+            let bank = new textAdventure.Building(gameContent.Bank.name, gameContent.Bank.description, gameContent.Bank.person, gameContent.Bank.item, gameContent.Bank.neighbour);
+            console.log(bank);
         }
         else if (gameSequenz === 2) {
             switch (_userInput) {
@@ -112,5 +115,83 @@ var textAdventure;
         divConsole.innerHTML += _theOutputString + "<br/>" + "<hr>"; // Fuegt Inhalt in den Div-Console Container ein
         divConsole.scrollTop = divConsole.scrollHeight - divConsole.clientHeight; // Nach jeder neuen Consolen Ausgabe nach unten Scrollen
     }
+})(textAdventure || (textAdventure = {}));
+var textAdventure;
+(function (textAdventure) {
+    class Building {
+        constructor(_name, _description, _person, _item, _neigbour) {
+            this.name = _name;
+            this.description = _description;
+            this.person = _person;
+            this.item = this.buildingItems(_item);
+            this.neighbour = _neigbour;
+        }
+        /* Erstellt alle Items welche sich im jeweiligen Raum befinden
+        @parm:      Item Objekte
+        @return:    Array von allen Items                                */
+        buildingItems(_item) {
+            let items = [];
+            for (let i = 0; i < _item.length; i++) {
+                let theItem = new textAdventure.Item(_item[i].name);
+                items.push(theItem);
+            }
+            console.log(items);
+            return items;
+        }
+    }
+    textAdventure.Building = Building;
+})(textAdventure || (textAdventure = {}));
+var textAdventure;
+(function (textAdventure) {
+    class Item {
+        constructor(_name) {
+            this.name = _name;
+        }
+    }
+    textAdventure.Item = Item;
+})(textAdventure || (textAdventure = {}));
+var textAdventure;
+(function (textAdventure) {
+    class Person {
+        constructor(_name, _text) {
+            this.name = _name;
+            this.text = _text;
+        }
+    }
+    textAdventure.Person = Person;
+    class Passanger extends Person {
+        constructor(_name, _text, _text2) {
+            super(_name, _text);
+            this.text2 = _text;
+        }
+    }
+    textAdventure.Passanger = Passanger;
+    class Salesman extends Person {
+        constructor(_name, _text, _text2) {
+            super(_name, _text);
+            this.text2 = _text;
+        }
+    }
+    textAdventure.Salesman = Salesman;
+    class Police extends Person {
+        constructor(_name, _text, _life, _item) {
+            super(_name, _text);
+            this.life = _life;
+            this.item = _item;
+        }
+    }
+    textAdventure.Police = Police;
+})(textAdventure || (textAdventure = {}));
+var textAdventure;
+(function (textAdventure) {
+    class Square {
+        constructor(_name, _description, _person, _item, _neighbour) {
+            this.name = _name;
+            this.description = _description;
+            this.person = _person;
+            this.item = _item;
+        }
+    }
+    textAdventure.Square = Square;
 })(textAdventure || (textAdventure = {}));
 //# sourceMappingURL=build.js.map
