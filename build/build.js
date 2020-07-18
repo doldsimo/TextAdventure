@@ -36,12 +36,11 @@ var textAdventure;
 var textAdventure;
 (function (textAdventure) {
     let gameSequenz = 0;
-    let gameContent = [];
-    // let Persons: Person[] = [];
+    let jsonConfigData = [];
+    let currentRoom;
     textAdventure.loadJsonData();
     function startProgram(_content) {
-        gameContent = _content;
-        console.log(_content);
+        jsonConfigData = _content;
         printOutput("Zum Starten des Spieles, gebe „start“ ein.");
         getUserInput();
         // saveJsonData(_content);
@@ -50,8 +49,7 @@ var textAdventure;
     function checkUsersChoice(_userInput) {
         // Spiel kann immer mit "q" oder "beenden" beendet werden
         if (_userInput === "q" || _userInput === "beenden") {
-            printOutput("Das Spiel wurde beendet");
-            gameSequenz = null;
+            printOutput(quitGame());
         }
         // Spieler wird aufgefordert seinen Namen einzugeben
         if (gameSequenz === 0) {
@@ -59,11 +57,14 @@ var textAdventure;
                 printOutput("Das Spiel wird gestartet, gebe bitte deinen Namen ein.");
                 gameSequenz++;
             }
+            else {
+                printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe. Zum Starten des Spieles Start eingeben!");
+            }
         }
         // Das Spiel startet im ersten Raum  
         else if (gameSequenz === 1) {
             // Setzt Spielername in der JSON-Datei
-            gameContent.User.name = _userInput;
+            jsonConfigData.User.name = _userInput;
             printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
             let timerNumber = 3;
             let refreshIntervalId = setInterval(function () {
@@ -75,30 +76,154 @@ var textAdventure;
             }, 700);
             setTimeout(function () {
                 gameSequenz++;
-                printOutput("Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich!");
+                printOutput("Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich! <br/> [h] | hilfe ");
                 // tslint:disable-next-line: align
             }, 2800);
-            let bank = new textAdventure.Building(gameContent.Bank.name, gameContent.Bank.description, gameContent.Bank.person, gameContent.Bank.item, gameContent.Bank.neighbour);
-            console.log(bank);
+            let bank = new textAdventure.Room(jsonConfigData.Bank.name, jsonConfigData.Bank.description, jsonConfigData.Bank.person, jsonConfigData.Bank.item, jsonConfigData.Bank.neighbour);
+            currentRoom = bank;
+            jsonConfigData.User.currentRoom = currentRoom;
+            console.log(jsonConfigData);
         }
         else if (gameSequenz === 2) {
             switch (_userInput) {
-                case "start":
-                    printOutput("Das Spiel wird gestartet, gebe bitte deinen Namen ein.");
+                case "hilfe":
+                case "h":
+                    printOutput(outputCommands());
                     break;
-                case "b":
-                    console.log("du hast b eingegeben");
+                case "norden":
+                case "n":
+                    walkToNorth();
                     break;
-                case "c":
-                    console.log("du hast c eingegeben");
+                case "süden":
+                case "s":
+                    walkToSouth();
                     break;
-                case "d":
-                    console.log("du hast d eingegeben");
+                case "westen":
+                case "w":
+                    walkToWast();
+                    break;
+                case "osten":
+                case "o":
+                    walkToEast();
+                    break;
+                case "q":
+                    printOutput(quitGame());
                     break;
                 default:
                     break;
             }
         }
+    }
+    function quitGame() {
+        gameSequenz = null;
+        return "Spiel beendet, bis zum nächsten mal.";
+    }
+    function walkToEast() {
+        // überprüft, ob der currentRoom in Norden ein Raum besitzt
+        if (currentRoom.neighbour[3] != null) {
+            printOutput("Du läufst nach Osten");
+            let roomInNorth = currentRoom.neighbour[3];
+            // Durchlaufen des jsonConfigData Files
+            for (let obj in jsonConfigData) {
+                // Überprüfung, dass es ein Objekt der Obersten ebene ist
+                if (jsonConfigData.hasOwnProperty(obj)) {
+                    // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
+                    if (obj === roomInNorth) {
+                        let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
+                        currentRoom = theNewRoom;
+                        jsonConfigData.User.currentRoom = currentRoom;
+                        printOutput(currentRoom.description);
+                    }
+                }
+            }
+        }
+        else {
+            printOutput("Hier ist kein Raum");
+        }
+    }
+    function walkToWast() {
+        // überprüft, ob der currentRoom in Norden ein Raum besitzt
+        if (currentRoom.neighbour[2] != null) {
+            printOutput("Du läufst nach Westen");
+            let roomInNorth = currentRoom.neighbour[2];
+            // Durchlaufen des jsonConfigData Files
+            for (let obj in jsonConfigData) {
+                // Überprüfung, dass es ein Objekt der Obersten ebene ist
+                if (jsonConfigData.hasOwnProperty(obj)) {
+                    // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
+                    if (obj === roomInNorth) {
+                        let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
+                        currentRoom = theNewRoom;
+                        jsonConfigData.User.currentRoom = currentRoom;
+                        printOutput(currentRoom.description);
+                    }
+                }
+            }
+        }
+        else {
+            printOutput("Hier ist kein Raum");
+        }
+    }
+    function walkToSouth() {
+        // überprüft, ob der currentRoom in Norden ein Raum besitzt
+        if (currentRoom.neighbour[1] != null) {
+            printOutput("Du läufst nach Süden");
+            let roomInNorth = currentRoom.neighbour[1];
+            // Durchlaufen des jsonConfigData Files
+            for (let obj in jsonConfigData) {
+                // Überprüfung, dass es ein Objekt der Obersten ebene ist
+                if (jsonConfigData.hasOwnProperty(obj)) {
+                    // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
+                    if (obj === roomInNorth) {
+                        let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
+                        currentRoom = theNewRoom;
+                        jsonConfigData.User.currentRoom = currentRoom;
+                        printOutput(currentRoom.description);
+                    }
+                }
+            }
+        }
+        else {
+            printOutput("Hier ist kein Raum");
+        }
+    }
+    function walkToNorth() {
+        // überprüft, ob der currentRoom in Norden ein Raum besitzt
+        if (currentRoom.neighbour[0] != null) {
+            printOutput("Du läufst nach Norden");
+            let roomInNorth = currentRoom.neighbour[0];
+            // Durchlaufen des jsonConfigData Files
+            for (let obj in jsonConfigData) {
+                // Überprüfung, dass es ein Objekt der Obersten ebene ist
+                if (jsonConfigData.hasOwnProperty(obj)) {
+                    // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
+                    if (obj === roomInNorth) {
+                        let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
+                        currentRoom = theNewRoom;
+                        jsonConfigData.User.currentRoom = currentRoom;
+                        printOutput(currentRoom.description);
+                    }
+                }
+            }
+        }
+        else {
+            printOutput("Hier ist kein Raum");
+        }
+    }
+    function outputCommands() {
+        let output = "[n] | norden <br/> [s] | süden <br/> [o] | osten <br/> [w] | westen <br/> [u] | umschauen <br> [i] | Inventar öffnen <br/> [a] | Item ablegen <br/>";
+        if (currentRoom.person.length != 0) {
+            output = output + " [r] | reden <br/>";
+            // for (let i = 0; i < currentRoom.person.length; i++) {
+            //     if (currentRoom.person[i].instanceof(Police)) {
+            //     }
+            // }
+        }
+        else if (currentRoom.item.length != 0) {
+            output = output + "[t] | Item nehmen <br/>";
+        }
+        output = output + "[q] | Spiel verlassen";
+        return output;
     }
     function getUserInput() {
         let inputField = document.getElementById("inputField");
@@ -115,31 +240,6 @@ var textAdventure;
         divConsole.innerHTML += _theOutputString + "<br/>" + "<hr>"; // Fuegt Inhalt in den Div-Console Container ein
         divConsole.scrollTop = divConsole.scrollHeight - divConsole.clientHeight; // Nach jeder neuen Consolen Ausgabe nach unten Scrollen
     }
-})(textAdventure || (textAdventure = {}));
-var textAdventure;
-(function (textAdventure) {
-    class Building {
-        constructor(_name, _description, _person, _item, _neigbour) {
-            this.name = _name;
-            this.description = _description;
-            this.person = _person;
-            this.item = this.buildingItems(_item);
-            this.neighbour = _neigbour;
-        }
-        /* Erstellt alle Items welche sich im jeweiligen Raum befinden
-        @parm:      Item Objekte
-        @return:    Array von allen Items                                */
-        buildingItems(_item) {
-            let items = [];
-            for (let i = 0; i < _item.length; i++) {
-                let theItem = new textAdventure.Item(_item[i].name);
-                items.push(theItem);
-            }
-            console.log(items);
-            return items;
-        }
-    }
-    textAdventure.Building = Building;
 })(textAdventure || (textAdventure = {}));
 var textAdventure;
 (function (textAdventure) {
@@ -184,14 +284,26 @@ var textAdventure;
 })(textAdventure || (textAdventure = {}));
 var textAdventure;
 (function (textAdventure) {
-    class Square {
-        constructor(_name, _description, _person, _item, _neighbour) {
+    class Room {
+        constructor(_name, _description, _person, _item, _neigbour) {
             this.name = _name;
             this.description = _description;
             this.person = _person;
-            this.item = _item;
+            this.item = this.buildingItems(_item);
+            this.neighbour = _neigbour;
+        }
+        /* Erstellt alle Items welche sich im jeweiligen Raum befinden
+        @parm:      Item Objekte
+        @return:    Array von allen Items                                */
+        buildingItems(_item) {
+            let items = [];
+            for (let i = 0; i < _item.length; i++) {
+                let theItem = new textAdventure.Item(_item[i].name);
+                items.push(theItem);
+            }
+            return items;
         }
     }
-    textAdventure.Square = Square;
+    textAdventure.Room = Room;
 })(textAdventure || (textAdventure = {}));
 //# sourceMappingURL=build.js.map

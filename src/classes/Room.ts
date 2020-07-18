@@ -1,5 +1,5 @@
 namespace textAdventure {
-    export class Building {
+    export class Room {
         name: string;
         description: string;
         person: Person[];
@@ -23,7 +23,6 @@ namespace textAdventure {
                 let theItem: Item = new Item(_item[i].name);
                 items.push(theItem);
             }
-            console.log(items);
             return items;
         }
     }

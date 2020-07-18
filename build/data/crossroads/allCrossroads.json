@@ -1,12 +1,12 @@
 {
 	"User": {
-		"name": "User",
+		"name": "",
 		"item": [
 			{
 				"name": "20000 Euro"
 			}
 		],
-		"currentRoom": "Bank",
+		"currentRoom": {},
 		"health": 100
 	},
 	"A": {
@@ -21,20 +21,7 @@
 				"name": "Stein"
 			}
 		],
-		"neighbour": [
-			{
-				"west": null
-			},
-			{
-				"east": "B"
-			},
-			{
-				"north": null
-			},
-			{
-				"south": "Baustelle"
-			}
-		]
+		"neighbour": [null, "Baustelle", null , "B"]
 	},
 	"B": {
 		"name": "B",
@@ -45,20 +32,7 @@
 				"name": "5 Euro"
 			}
 		],
-		"neighbour": [
-			{
-				"west": "A"
-			},
-			{
-				"east": "C"
-			},
-			{
-				"north": "Garage"
-			},
-			{
-				"south": "D"
-			}
-		]
+		"neighbour": ["Garage", "E", "A", "C"]
 	},
 	"C": {
 		"name": "C",
@@ -74,20 +48,7 @@
 				"name": "Papier"
 			}
 		],
-		"neighbour": [
-			{
-				"west": "B"
-			},
-			{
-				"east": null
-			},
-			{
-				"north": null
-			},
-			{
-				"south": "F"
-			}
-		]
+		"neighbour": [null, "F", "B", null]
 	},
 	"D": {
 		"name": "D",
@@ -103,20 +64,7 @@
 				"name": "Stift"
 			}
 		],
-		"neighbour": [
-			{
-				"west": "Polizeiwache"
-			},
-			{
-				"east": "E"
-			},
-			{
-				"north": "Baustelle"
-			},
-			{
-				"south": "G"
-			}
-		]
+		"neighbour": ["Baustelle", "G", "Polizeiwache", "E"]
 	},
 	"E": {
 		"name": "E",
@@ -132,20 +80,7 @@
 				"name": "Schere"
 			}
 		],
-		"neighbour": [
-			{
-				"west": "D"
-			},
-			{
-				"east": "F"
-			},
-			{
-				"north": "B"
-			},
-			{
-				"south": "H"
-			}
-		]
+		"neighbour": ["B", "H", "D", "F"]
 	},
 	"F": {
 		"name": "F",
@@ -156,20 +91,7 @@
 				"name": "Schokolade"
 			}
 		],
-		"neighbour": [
-			{
-				"west": "E"
-			},
-			{
-				"east": "Apotheke"
-			},
-			{
-				"north": "C"
-			},
-			{
-				"south": "I"
-			}
-		]
+		"neighbour": ["C", "I", "E", "Apotheke"]
 	},
 	"G": {
 		"name": "G",
@@ -180,20 +102,7 @@
 				"name": "Garagenschlüssel"
 			}
 		],
-		"neighbour": [
-			{
-				"west": null
-			},
-			{
-				"east": "H"
-			},
-			{
-				"north": "D"
-			},
-			{
-				"south": null
-			}
-		]
+		"neighbour": ["D", null, null, "H"]
 	},
 	"H": {
 		"name": "H",
@@ -207,20 +116,7 @@
 				"name": "Flasche"
 			}
 		],
-		"neighbour": [
-			{
-				"west": "G"
-			},
-			{
-				"east": "I"
-			},
-			{
-				"north": "E"
-			},
-			{
-				"south": "Bank"
-			}
-		]
+		"neighbour": ["E", "Bank", "G", "I"]
 	},
 	"I": {
 		"name": "I",
@@ -231,20 +127,7 @@
 				"name": "Autoschlüssel"
 			}
 		],
-		"neighbour": [
-			{
-				"west": "H"
-			},
-			{
-				"east": null
-			},
-			{
-				"north": "F"
-			},
-			{
-				"south": null
-			}
-		]
+		"neighbour": ["F", null, "H", null]
 	},
 	"Bank": {
 		"name": "Bank",
@@ -261,14 +144,14 @@
 				"name": "Papier"
 			}
 		],
-		"neighbour": ["H", "null", "null", "null"]
+		"neighbour": ["H", null, null, null]
 	},
 	"Polizeiwache": {
 		"name": "Polizeiwache",
 		"description": "Das ist die Polizeiwache",
 		"person": [],
 		"item": [],
-		"neighbour": []
+		"neighbour": [null, null, null, "D" ]
 	},
 	"Apotheke": {
 		"name": "Apotheke",
@@ -290,26 +173,13 @@
 				"name": "Spritze"
 			}
 		],
-		"neighbour": [
-			{
-				"west": "F"
-			},
-			{
-				"east": null
-			},
-			{
-				"north": null
-			},
-			{
-				"south": null
-			}
-		]
+		"neighbour": [null, null, "F", null]
 	},
 	"Garage": {
 		"name": "Garage",
 		"description": "Das ist die Garage",
 		"person": [],
 		"item": [],
-		"neighbour": []
+		"neighbour": [null, "B", null, null]
 	}
 }
