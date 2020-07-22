@@ -1,15 +1,27 @@
 "use strict";
 var textAdventure;
 (function (textAdventure) {
+    /**
+     * Funktion Lädt Json-Datei
+     */
     async function loadJsonData() {
         let content = await load("data/crossroads/allCrossroads.json");
         textAdventure.startProgram(content);
     }
     textAdventure.loadJsonData = loadJsonData;
+    /**
+     * Funktion Speichert die Json-Datei
+     */
     async function saveJsonData(_content) {
         save(JSON.stringify(_content), "data/crossroads/allCrossroads_New.json");
     }
     textAdventure.saveJsonData = saveJsonData;
+    /**
+     * Funktion lädt die JSON-Datei und gibt diese zurück
+     *
+     * @param _filename: String | Name der JSON-Datei, welche gealden werden soll
+     * @return (json): JSONObject | Gibt die geladenen Json-Daten zurück
+     */
     async function load(_filename) {
         // console.log("Start fetch");
         let response = await fetch(_filename);
@@ -35,10 +47,15 @@ var textAdventure;
 })(textAdventure || (textAdventure = {}));
 var textAdventure;
 (function (textAdventure) {
-    let gameSequenz = 0;
-    let jsonConfigData = [];
-    let currentRoom;
+    let gameSequenz = 0; // Spiel Sequenz in welcher sich der Spieler befindet
+    let jsonConfigData = []; // Json Datei
+    let currentRoom; // Akuteller Raum 
     textAdventure.loadJsonData();
+    /**
+     * Funktion startet das Spiel
+     *
+     * @param _content: JSONObject | Enthält alle Daten des Spieles
+     */
     function startProgram(_content) {
         jsonConfigData = _content;
         printOutput("Zum Starten des Spieles, gebe „start“ ein.");
@@ -46,6 +63,11 @@ var textAdventure;
         // saveJsonData(_content);
     }
     textAdventure.startProgram = startProgram;
+    /**
+     * Funktion reagiert auf den User Input und ruft weitere Funktionen auf - je nach Input
+     *
+     * @param _userInput: String | Eingabe welche der User im Input Feld eingibt
+     */
     function checkUsersChoice(_userInput) {
         // Spiel kann immer mit "q" oder "beenden" beendet werden
         if (_userInput === "q" || _userInput === "beenden") {
@@ -114,102 +136,94 @@ var textAdventure;
             }
         }
     }
+    /**
+     * Funktion beendet das Spiel
+     */
     function quitGame() {
         gameSequenz = null;
         return "Spiel beendet, bis zum nächsten mal.";
     }
+    /**
+     * Funktion Überpüft ob im aktuellen Raum in Richtung Osten ein Raum existiert
+     */
     function walkToEast() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (currentRoom.neighbour[3] != null) {
             printOutput("Du läufst nach Osten");
-            let roomInNorth = currentRoom.neighbour[3];
-            // Durchlaufen des jsonConfigData Files
-            for (let obj in jsonConfigData) {
-                // Überprüfung, dass es ein Objekt der Obersten ebene ist
-                if (jsonConfigData.hasOwnProperty(obj)) {
-                    // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
-                    if (obj === roomInNorth) {
-                        let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
-                        currentRoom = theNewRoom;
-                        jsonConfigData.User.currentRoom = currentRoom;
-                        printOutput(currentRoom.description);
-                    }
-                }
-            }
+            let roomInEast = currentRoom.neighbour[3];
+            walkToNewRoom(roomInEast);
         }
         else {
-            printOutput("Hier ist kein Raum");
+            printOutput("In Osten befindet sich kein Raum");
         }
     }
+    /**
+     * Funktion Überpüft ob im aktuellen Raum in Richtung Westen ein Raum existiert
+     */
     function walkToWast() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (currentRoom.neighbour[2] != null) {
             printOutput("Du läufst nach Westen");
-            let roomInNorth = currentRoom.neighbour[2];
-            // Durchlaufen des jsonConfigData Files
-            for (let obj in jsonConfigData) {
-                // Überprüfung, dass es ein Objekt der Obersten ebene ist
-                if (jsonConfigData.hasOwnProperty(obj)) {
-                    // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
-                    if (obj === roomInNorth) {
-                        let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
-                        currentRoom = theNewRoom;
-                        jsonConfigData.User.currentRoom = currentRoom;
-                        printOutput(currentRoom.description);
-                    }
-                }
-            }
+            let roomInWest = currentRoom.neighbour[2];
+            walkToNewRoom(roomInWest);
         }
         else {
-            printOutput("Hier ist kein Raum");
+            printOutput("In Westen befindet sich kein Raum");
         }
     }
+    /**
+     * Funktion Überpüft ob im aktuellen Raum in Richtung Süden ein Raum existiert
+     */
     function walkToSouth() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (currentRoom.neighbour[1] != null) {
             printOutput("Du läufst nach Süden");
-            let roomInNorth = currentRoom.neighbour[1];
-            // Durchlaufen des jsonConfigData Files
-            for (let obj in jsonConfigData) {
-                // Überprüfung, dass es ein Objekt der Obersten ebene ist
-                if (jsonConfigData.hasOwnProperty(obj)) {
-                    // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
-                    if (obj === roomInNorth) {
-                        let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
-                        currentRoom = theNewRoom;
-                        jsonConfigData.User.currentRoom = currentRoom;
-                        printOutput(currentRoom.description);
-                    }
-                }
-            }
+            let roomInSouth = currentRoom.neighbour[1];
+            walkToNewRoom(roomInSouth);
         }
         else {
-            printOutput("Hier ist kein Raum");
+            printOutput("In Süden befindet sich kein Raum");
         }
     }
+    /**
+     * Funktion Überpüft ob im aktuellen Raum in Richtung Norden ein Raum existiert
+     */
     function walkToNorth() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (currentRoom.neighbour[0] != null) {
             printOutput("Du läufst nach Norden");
             let roomInNorth = currentRoom.neighbour[0];
-            // Durchlaufen des jsonConfigData Files
-            for (let obj in jsonConfigData) {
-                // Überprüfung, dass es ein Objekt der Obersten ebene ist
-                if (jsonConfigData.hasOwnProperty(obj)) {
-                    // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
-                    if (obj === roomInNorth) {
-                        let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
-                        currentRoom = theNewRoom;
-                        jsonConfigData.User.currentRoom = currentRoom;
-                        printOutput(currentRoom.description);
-                    }
+            walkToNewRoom(roomInNorth);
+        }
+        else {
+            printOutput("In Norden befindet sich kein Raum");
+        }
+    }
+    /**
+     * Funktion erzeugt ein neues Raum-Objekt, welche anschließend in der "currentRoom" variable gespeichert wird
+     *
+     * @param _nameOfNewRoom: String | Name des Raumes in welchen man navigieren möchte
+     */
+    function walkToNewRoom(_nameOfNewRoom) {
+        // Durchlaufen des jsonConfigData Files
+        for (let obj in jsonConfigData) {
+            // Überprüfung, dass es ein Objekt der Obersten ebene ist
+            if (jsonConfigData.hasOwnProperty(obj)) {
+                // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
+                if (obj === _nameOfNewRoom) {
+                    let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
+                    currentRoom = theNewRoom;
+                    jsonConfigData.User.currentRoom = currentRoom;
+                    printOutput(currentRoom.description);
                 }
             }
         }
-        else {
-            printOutput("Hier ist kein Raum");
-        }
     }
+    /**
+     * Funktion gibt Commandos zurück welcher der User im jeweiligen Raum hat
+     *
+     * @return output: String
+     */
     function outputCommands() {
         let output = "[n] | norden <br/> [s] | süden <br/> [o] | osten <br/> [w] | westen <br/> [u] | umschauen <br> [i] | Inventar öffnen <br/> [a] | Item ablegen <br/>";
         if (currentRoom.person.length != 0) {
@@ -225,6 +239,9 @@ var textAdventure;
         output = output + "[q] | Spiel verlassen";
         return output;
     }
+    /**
+     * Funktion löst Event aus, sobald der User etwas ins Input Feld eingegeben hat und mit Enter bestätigt hat
+     */
     function getUserInput() {
         let inputField = document.getElementById("inputField");
         inputField.addEventListener("keyup", function (_event) {
@@ -235,6 +252,11 @@ var textAdventure;
             }
         });
     }
+    /**
+     * Funktion fuegt den übergebenen String dem HTML-Dokument hinzu
+     *
+     * @param _theOutputString: String | String welcher ausgegeben werden soll
+     */
     function printOutput(_theOutputString) {
         let divConsole = document.getElementById("console");
         divConsole.innerHTML += _theOutputString + "<br/>" + "<hr>"; // Fuegt Inhalt in den Div-Console Container ein
