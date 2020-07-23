@@ -58,9 +58,14 @@ var textAdventure;
      */
     function startProgram(_content) {
         jsonConfigData = _content;
-        printOutput("Zum Starten des Spieles, gebe „start“ ein.");
+        if (gameSequenz === 0) {
+            printOutput("Willkommen bei ESCAPE. <br/> Starte ein neues Spiel, gebe „start“. <br/> Laden einen Spielstand „load“.");
+        }
+        else {
+            createNewRoom(jsonConfigData.User.currentRoom);
+            gameSequenz = 2;
+        }
         getUserInput();
-        // saveJsonData(_content);
     }
     textAdventure.startProgram = startProgram;
     /**
@@ -69,72 +74,114 @@ var textAdventure;
      * @param _userInput: String | Eingabe welche der User im Input Feld eingibt
      */
     function checkUsersChoice(_userInput) {
+        // debugger;
         // Spiel kann immer mit "q" oder "beenden" beendet werden
         if (_userInput === "q" || _userInput === "beenden") {
             printOutput(quitGame());
         }
         // Spieler wird aufgefordert seinen Namen einzugeben
-        if (gameSequenz === 0) {
-            if (_userInput === "start") {
-                printOutput("Das Spiel wird gestartet, gebe bitte deinen Namen ein.");
+        switch (gameSequenz) {
+            case 0:
+                switch (_userInput) {
+                    case "start":
+                        printOutput("Das Spiel wird gestartet, gebe bitte deinen Namen ein.");
+                        gameSequenz++;
+                        break;
+                    case "load":
+                        loadUsersJSONData();
+                        break;
+                    default:
+                        printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
+                        break;
+                }
+                break;
+            case 1:
+                startGameRegulary(_userInput);
+                break;
+            case 2:
+                currentRoom = jsonConfigData.User.currentRoom;
+                switch (_userInput) {
+                    case "umschauen":
+                    case "u":
+                        printOutput(lookAroundRoom());
+                        break;
+                    case "hilfe":
+                    case "h":
+                        printOutput(outputCommands());
+                        break;
+                    case "norden":
+                    case "n":
+                        walkToNorth();
+                        break;
+                    case "süden":
+                    case "s":
+                        walkToSouth();
+                        break;
+                    case "westen":
+                    case "w":
+                        walkToWast();
+                        break;
+                    case "osten":
+                    case "o":
+                        walkToEast();
+                        break;
+                    case "q":
+                        printOutput(quitGame());
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    function startGameRegulary(_userInput) {
+        // Setzt Spielername in der JSON-Datei
+        jsonConfigData.User.name = _userInput;
+        printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
+        let timerNumber = 3;
+        let refreshIntervalId = setInterval(function () {
+            if (timerNumber < 2)
+                clearInterval(refreshIntervalId);
+            printOutput(timerNumber.toString());
+            timerNumber--;
+            // tslint:disable-next-line: align
+        }, 700);
+        setTimeout(function () {
+            gameSequenz++;
+            printOutput("Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich! <br/> [h] | hilfe ");
+            // tslint:disable-next-line: align
+        }, 2800);
+        let bank = new textAdventure.Room(jsonConfigData.Bank.name, jsonConfigData.Bank.description, jsonConfigData.Bank.person, jsonConfigData.Bank.item, jsonConfigData.Bank.neighbour);
+        currentRoom = bank;
+        jsonConfigData.User.currentRoom = currentRoom;
+        console.log(jsonConfigData);
+    }
+    function loadUsersJSONData() {
+        printOutput("<input id='loadFileButton' accept='.json' type='file'>");
+        let loadFileButton = document.getElementById("loadFileButton");
+        loadFileButton.addEventListener("change", function () {
+            let fr = new FileReader();
+            fr.onload = function () {
+                // Überschreibt die jsonConfigData variable mit dem hochgeladenen Json-File
+                jsonConfigData = JSON.parse(fr.result.toString());
+                // Deaktiviert den Button
+                loadFileButton.setAttribute("disabled", "");
+                printOutput("Wilkommen zurück " + jsonConfigData.User.name);
                 gameSequenz++;
-            }
-            else {
-                printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe. Zum Starten des Spieles Start eingeben!");
-            }
-        }
-        // Das Spiel startet im ersten Raum  
-        else if (gameSequenz === 1) {
-            // Setzt Spielername in der JSON-Datei
-            jsonConfigData.User.name = _userInput;
-            printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
-            let timerNumber = 3;
-            let refreshIntervalId = setInterval(function () {
-                if (timerNumber < 2)
-                    clearInterval(refreshIntervalId);
-                printOutput(timerNumber.toString());
-                timerNumber--;
-                // tslint:disable-next-line: align
-            }, 700);
-            setTimeout(function () {
-                gameSequenz++;
-                printOutput("Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich! <br/> [h] | hilfe ");
-                // tslint:disable-next-line: align
-            }, 2800);
-            let bank = new textAdventure.Room(jsonConfigData.Bank.name, jsonConfigData.Bank.description, jsonConfigData.Bank.person, jsonConfigData.Bank.item, jsonConfigData.Bank.neighbour);
-            currentRoom = bank;
-            jsonConfigData.User.currentRoom = currentRoom;
-            console.log(jsonConfigData);
-        }
-        else if (gameSequenz === 2) {
-            switch (_userInput) {
-                case "hilfe":
-                case "h":
-                    printOutput(outputCommands());
-                    break;
-                case "norden":
-                case "n":
-                    walkToNorth();
-                    break;
-                case "süden":
-                case "s":
-                    walkToSouth();
-                    break;
-                case "westen":
-                case "w":
-                    walkToWast();
-                    break;
-                case "osten":
-                case "o":
-                    walkToEast();
-                    break;
-                case "q":
-                    printOutput(quitGame());
-                    break;
-                default:
-                    break;
-            }
-        }
+                startProgram(JSON.parse(fr.result.toString()));
+            };
+            fr.readAsText(this.files[0]);
+        });
+    }
+    /**
+     * Funktion gibt den Beschreibungstext des aktuellen Raumes zurück
+     *
+     * @return: String | Beschreibungstext des Raumes
+     */
+    function lookAroundRoom() {
+        return currentRoom.description;
     }
     /**
      * Funktion beendet das Spiel
@@ -151,7 +198,7 @@ var textAdventure;
         if (currentRoom.neighbour[3] != null) {
             printOutput("Du läufst nach Osten");
             let roomInEast = currentRoom.neighbour[3];
-            walkToNewRoom(roomInEast);
+            createNewRoom(roomInEast);
         }
         else {
             printOutput("In Osten befindet sich kein Raum");
@@ -165,7 +212,7 @@ var textAdventure;
         if (currentRoom.neighbour[2] != null) {
             printOutput("Du läufst nach Westen");
             let roomInWest = currentRoom.neighbour[2];
-            walkToNewRoom(roomInWest);
+            createNewRoom(roomInWest);
         }
         else {
             printOutput("In Westen befindet sich kein Raum");
@@ -179,7 +226,7 @@ var textAdventure;
         if (currentRoom.neighbour[1] != null) {
             printOutput("Du läufst nach Süden");
             let roomInSouth = currentRoom.neighbour[1];
-            walkToNewRoom(roomInSouth);
+            createNewRoom(roomInSouth);
         }
         else {
             printOutput("In Süden befindet sich kein Raum");
@@ -193,7 +240,7 @@ var textAdventure;
         if (currentRoom.neighbour[0] != null) {
             printOutput("Du läufst nach Norden");
             let roomInNorth = currentRoom.neighbour[0];
-            walkToNewRoom(roomInNorth);
+            createNewRoom(roomInNorth);
         }
         else {
             printOutput("In Norden befindet sich kein Raum");
@@ -204,7 +251,7 @@ var textAdventure;
      *
      * @param _nameOfNewRoom: String | Name des Raumes in welchen man navigieren möchte
      */
-    function walkToNewRoom(_nameOfNewRoom) {
+    function createNewRoom(_nameOfNewRoom) {
         // Durchlaufen des jsonConfigData Files
         for (let obj in jsonConfigData) {
             // Überprüfung, dass es ein Objekt der Obersten ebene ist
