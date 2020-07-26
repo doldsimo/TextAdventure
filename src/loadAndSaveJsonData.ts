@@ -4,14 +4,14 @@ namespace textAdventure {
      * Funktion Lädt Json-Datei
      */
     export async function loadJsonData(): Promise<void> {
-        let content: JSONObject = await load("data/crossroads/allCrossroads.json");
+        let content: JSONObject = await load("data/allGameInformation.json");
         startProgram(content);
     }
     /**
      * Funktion Speichert die Json-Datei
      */
     export async function saveJsonData(_content: JSONObject): Promise<void> {
-        save(JSON.stringify(_content), "data/crossroads/allCrossroads_New.json");
+        save(JSON.stringify(_content), "data/allGameInformation_New.json");
     }
 
     /**

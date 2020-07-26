@@ -2,9 +2,23 @@
 namespace textAdventure {
     let gameSequenz: number = 0; // Spiel Sequenz in welcher sich der Spieler befindet
     let jsonConfigData: any = []; // Json Datei
+
     let currentRoom: Room; // Akuteller Raum 
+    let inventory: Item[] = []; // Inventar 
+    let health: number; // Lebensanzeige
 
     loadJsonData();
+
+
+    let inputField: HTMLInputElement = document.getElementById("inputField") as HTMLInputElement;
+
+    inputField.addEventListener("keyup", function (_event: KeyboardEvent): void {
+        if (_event.key === "Enter") {
+            let inputValue: string = inputField.value.toLowerCase();
+            checkUsersChoice(inputValue);
+            inputField.value = "";
+        }
+    });
 
     /**
      * Funktion startet das Spiel
@@ -13,10 +27,13 @@ namespace textAdventure {
      */
     export function startProgram(_content: JSONObject): void {
         jsonConfigData = _content;
+        // Fuege das anfang Item zum Inventar hinzu
+        inventory.push(new Item(jsonConfigData.User.item[0].name));
         if (gameSequenz === 0) {
             printOutput("Willkommen bei ESCAPE. <br/> Starte ein neues Spiel, gebe „start“. <br/> Laden einen Spielstand „load“.");
         } else {
             createNewRoom(jsonConfigData.User.currentRoom);
+            health = jsonConfigData.User.health;
             gameSequenz = 2;
         }
         getUserInput();
@@ -28,7 +45,6 @@ namespace textAdventure {
      * @param _userInput: String | Eingabe welche der User im Input Feld eingibt
      */
     function checkUsersChoice(_userInput: string): void {
-        // debugger;
         // Spiel kann immer mit "q" oder "beenden" beendet werden
         if (_userInput === "q" || _userInput === "beenden") {
             printOutput(quitGame());
@@ -53,7 +69,6 @@ namespace textAdventure {
                 startGameRegulary(_userInput);
                 break;
             case 2:
-                currentRoom = jsonConfigData.User.currentRoom;
                 switch (_userInput) {
                     case "umschauen":
                     case "u":
@@ -79,6 +94,26 @@ namespace textAdventure {
                     case "o":
                         walkToEast();
                         break;
+                    case "inventar":
+                    case "i":
+                        printOutput(outputInventory());
+                        break;
+                    case "nehmen":
+                    case "t":
+                        takeItem();
+                        break;
+                    case "ablegen":
+                    case "a":
+                        dropItem();
+                        break;
+                    case "leben":
+                    case "l":
+                        printOutput(showlife());
+                        break;
+                    case "reden":
+                    case "r":
+                        ;
+                        break;
                     case "q":
                         printOutput(quitGame());
                         break;
@@ -86,15 +121,104 @@ namespace textAdventure {
                         break;
                 }
                 break;
+            // Item Aufnehmen
+            case 3:
+                let userInputAsNumber: number = +_userInput;
+                if (Number.isInteger(userInputAsNumber) && _userInput != "") {
+                    pullItemFromRoomAndPushToInventory(userInputAsNumber);
+                } else {
+                    printOutput("Falsche eingabe");
+                }
+                break;
+            // Item Ablegen
+            case 4:
+                let inputAsNumber: number = +_userInput;
+                if (Number.isInteger(inputAsNumber) && _userInput != "") {
+                    pullItemFromInventoryAndPushToRoom(inputAsNumber);
+                } else {
+                    printOutput("Falsche eingabe");
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    function showlife(): string {
+        return "Dein aktueller Gesundheitszustand ist: " + health + "%";
+    }
+
+    function pullItemFromInventoryAndPushToRoom(_inputAsNumber: number): void {
+        for (let i: number = 0; i < inventory.length; i++) {
+            if (i === _inputAsNumber - 1) {
+                let item: Item = inventory.splice(_inputAsNumber - 1, _inputAsNumber)[0];
+                // Fügt das Item im akutellen Raum in die JSON-Datei ein
+                jsonConfigData[currentRoom.name].item.push(item);
+                currentRoom.item.push(item);
+                printOutput(item.name + " abgelegt");
+            }
+        }
+        gameSequenz = 2;
+    }
+
+    function dropItem(): void {
+        let output: string = "";
+        // Überprüfung, ob sich im Items im Inventar befinden
+        if (inventory.length != 0) {
+            output = output + "Folgende Gegenstände hast du im Inventar";
+            for (let i: number = 0; i < inventory.length; i++) {
+                output = output + "<br/>" + "[" + [i + 1] + "] " + inventory[i].name;
+            }
+        } else {
+            output = output + "Du hast keine Gegenstände im Inventar";
+        }
+        output = output + "<br/>Was möchtest du ablegen? <br/>Gebe die Nummer ein.";
+        printOutput(output);
+        gameSequenz = 4;
+    }
+
+    function pullItemFromRoomAndPushToInventory(_userInputAsNumber: number): void {
+        for (let i: number = 0; i < currentRoom.item.length; i++) {
+            if (i === _userInputAsNumber - 1) {
+                let item: Item = currentRoom.item.splice(_userInputAsNumber - 1, _userInputAsNumber)[0];
+                // Löscht des Item aus der JSON-Datei
+                jsonConfigData[currentRoom.name].item.splice(_userInputAsNumber - 1, _userInputAsNumber);
+                inventory.push(item);
+                printOutput(item.name + " aufgenommen");
+            }
+        }
+        gameSequenz = 2;
+    }
+
+    function takeItem(): void {
+        let output: string = "";
+        // Überprüfung, ob sich im Raum Items befinden
+        if (currentRoom.item.length != 0) {
+            output = output + "Hier befinden sich folgende Gegenstände:";
+            for (let i: number = 0; i < currentRoom.item.length; i++) {
+                output = output + "<br/>" + "[" + [i + 1] + "] " + currentRoom.item[i].name;
+            }
+        } else {
+            output = output + "Hier befinden sich keine Gegenstände";
+        }
+        output = output + "<br/>Was möchtest du aufnehmen? <br/>Gebe die Nummer ein.";
+        printOutput(output);
+        gameSequenz = 3;
+    }
+
+    function outputInventory(): string {
+        let output: string = "In deinem Inventar befinden sich:";
+        for (let i: number = 0; i < inventory.length; i++) {
+            output = output + "<br/> - " + inventory[i].name;
+        }
+        return output;
     }
 
 
     function startGameRegulary(_userInput: string): void {
         // Setzt Spielername in der JSON-Datei
         jsonConfigData.User.name = _userInput;
+        gameSequenz++;
         printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
         let timerNumber: number = 3;
         let refreshIntervalId: number = setInterval(function (): void {
@@ -105,14 +229,15 @@ namespace textAdventure {
             // tslint:disable-next-line: align
         }, 700);
         setTimeout(function (): void {
-            gameSequenz++;
-            printOutput("Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich! <br/> [h] | hilfe ");
+            let output: string = "Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich! <br/> [h] | Hilfe";
+            printOutput(output);
             // tslint:disable-next-line: align
         }, 2800);
-        let bank: Room = new Room(jsonConfigData.Bank.name, jsonConfigData.Bank.description, jsonConfigData.Bank.person, jsonConfigData.Bank.item, jsonConfigData.Bank.neighbour);
+        // Setzt den Anfangsraum fest
+        let bank: Room = new Room(jsonConfigData.Bank.name, jsonConfigData.Bank.description, jsonConfigData.Bank.person.polizei, jsonConfigData.Bank.person.passant, jsonConfigData.Bank.person.verkaeufer, jsonConfigData.Bank.item, jsonConfigData.Bank.neighbour);
         currentRoom = bank;
-        jsonConfigData.User.currentRoom = currentRoom;
-        console.log(jsonConfigData);
+        // Setzt das Anfangsleben fest
+        health = jsonConfigData.User.health;
     }
 
     function loadUsersJSONData(): void {
@@ -133,6 +258,42 @@ namespace textAdventure {
         });
     }
 
+    function outputPersonsInRoom(): string {
+        let output: string = "";
+        if (currentRoom.person.length != 0) {
+            output = output + "Hier befinden sich folgende Personen:";
+            for (let i: number = 0; i < currentRoom.person.length; i++) {
+                if (currentRoom.person[i] instanceof Police) {
+                    output = output + "<br/> Polizei | " + currentRoom.person[i].name;
+                }
+                if (currentRoom.person[i] instanceof Passanger) {
+                    output = output + "<br/> Passant | " + currentRoom.person[i].name;
+                }
+                if (currentRoom.person[i] instanceof Salesman) {
+                    output = output + "<br/> Verkäufer | " + currentRoom.person[i].name;
+                }
+            }
+        } else {
+            output = output + "Hier befinden sich keine Personen";
+
+        }
+
+        return output;
+    }
+
+    function outputItemsInRoom(): string {
+        let output: string = "";
+        // Überprüfung, ob sich im Raum Items befinden
+        if (currentRoom.item.length != 0) {
+            output = output + "Hier befinden sich folgende Gegenstände:";
+            for (let i: number = 0; i < currentRoom.item.length; i++) {
+                output = output + "<br/> - " + currentRoom.item[i].name;
+            }
+        } else {
+            output = output + "Hier befinden sich keine Gegenstände";
+        }
+        return output;
+    }
 
     /**
      * Funktion gibt den Beschreibungstext des aktuellen Raumes zurück
@@ -140,7 +301,7 @@ namespace textAdventure {
      * @return: String | Beschreibungstext des Raumes
      */
     function lookAroundRoom(): string {
-        return currentRoom.description;
+        return outputItemsInRoom() + "<br/>" + outputPersonsInRoom();
     }
 
     /**
@@ -184,11 +345,14 @@ namespace textAdventure {
      */
     function walkToSouth(): void {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
-        if (currentRoom.neighbour[1] != null) {
+        if (currentRoom.neighbour[1] != null && currentRoom.neighbour[1] != "Baustelle") {
             printOutput("Du läufst nach Süden");
             let roomInSouth: string = currentRoom.neighbour[1];
             createNewRoom(roomInSouth);
-        } else {
+        } else if (currentRoom.neighbour[1] === "Baustelle") {
+            printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
+        }
+        else {
             printOutput("In Süden befindet sich kein Raum");
         }
     }
@@ -198,16 +362,17 @@ namespace textAdventure {
      */
     function walkToNorth(): void {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
-        if (currentRoom.neighbour[0] != null) {
+        if (currentRoom.neighbour[0] != null && currentRoom.neighbour[0] != "Baustelle") {
             printOutput("Du läufst nach Norden");
             let roomInNorth: string = currentRoom.neighbour[0];
             createNewRoom(roomInNorth);
+        } else if (currentRoom.neighbour[0] === "Baustelle") {
+            printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
         } else {
             printOutput("In Norden befindet sich kein Raum");
         }
+
     }
-
-
 
     /**
      * Funktion erzeugt ein neues Raum-Objekt, welche anschließend in der "currentRoom" variable gespeichert wird
@@ -221,10 +386,11 @@ namespace textAdventure {
             if (jsonConfigData.hasOwnProperty(obj)) {
                 // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
                 if (obj === _nameOfNewRoom) {
-                    let theNewRoom: Room = new Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
+                    let theNewRoom: Room = new Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person.polizei, jsonConfigData[obj].person.passant, jsonConfigData[obj].person.verkaeufer, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
                     currentRoom = theNewRoom;
                     jsonConfigData.User.currentRoom = currentRoom;
-                    printOutput(currentRoom.description);
+                    // let output: string = currentRoom.description + "<br/>" + outputItemsInRoom();
+                    printOutput(currentRoom.description + "<br/> [h] | Hilfe");
                 }
             }
         }
@@ -237,19 +403,24 @@ namespace textAdventure {
      * @return output: String 
      */
     function outputCommands(): string {
-        let output: string = "[n] | norden <br/> [s] | süden <br/> [o] | osten <br/> [w] | westen <br/> [u] | umschauen <br> [i] | Inventar öffnen <br/> [a] | Item ablegen <br/>";
+        let output: string = "[n] | Norden <br/> [s] | Süden <br/> [o] | Osten <br/> [w] | Westen <br/>[u] | umschauen <br> [l] | Gesundheitszustand anzeigen <br/> [i] | Inventar öffnen <br/> ";
         if (currentRoom.person.length != 0) {
             output = output + " [r] | reden <br/>";
-            // for (let i = 0; i < currentRoom.person.length; i++) {
-            //     if (currentRoom.person[i].instanceof(Police)) {
-
-            //     }
-
-            // }
-        } else if (currentRoom.item.length != 0) {
+        }
+        if (currentRoom.item.length != 0) {
             output = output + "[t] | Item nehmen <br/>";
         }
-        output = output + "[q] | Spiel verlassen";
+        if (inventory.length > 0) {
+            output = output + "[a] | Item ablegen <br/>";
+        }
+        let firstTime: boolean = true;
+        for (let i: number = 0; i < currentRoom.person.length; i++) {
+            if (currentRoom.person[i] instanceof Police && firstTime) {
+                output = output + "[z] | Polizei angreifen <br/>";
+                firstTime = false;
+            }
+        }
+        output = output + "-------------------------- <br/>[q] | Spiel verlassen";
         return output;
     }
 
@@ -257,15 +428,7 @@ namespace textAdventure {
      * Funktion löst Event aus, sobald der User etwas ins Input Feld eingegeben hat und mit Enter bestätigt hat
      */
     function getUserInput(): void {
-        let inputField: HTMLInputElement = document.getElementById("inputField") as HTMLInputElement;
 
-        inputField.addEventListener("keyup", function (_event: KeyboardEvent): void {
-            if (_event.key === "Enter") {
-                let inputValue: string = inputField.value.toLowerCase();
-                checkUsersChoice(inputValue);
-                inputField.value = "";
-            }
-        });
     }
 
     /**
@@ -279,5 +442,3 @@ namespace textAdventure {
         divConsole.scrollTop = divConsole.scrollHeight - divConsole.clientHeight;   // Nach jeder neuen Consolen Ausgabe nach unten Scrollen
     }
 }
-
-

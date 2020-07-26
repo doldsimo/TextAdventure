@@ -50,7 +50,17 @@ var textAdventure;
     let gameSequenz = 0; // Spiel Sequenz in welcher sich der Spieler befindet
     let jsonConfigData = []; // Json Datei
     let currentRoom; // Akuteller Raum 
+    let inventory = []; // Inventar 
+    let health; // Lebensanzeige
     textAdventure.loadJsonData();
+    let inputField = document.getElementById("inputField");
+    inputField.addEventListener("keyup", function (_event) {
+        if (_event.key === "Enter") {
+            let inputValue = inputField.value.toLowerCase();
+            checkUsersChoice(inputValue);
+            inputField.value = "";
+        }
+    });
     /**
      * Funktion startet das Spiel
      *
@@ -58,11 +68,14 @@ var textAdventure;
      */
     function startProgram(_content) {
         jsonConfigData = _content;
+        // Fuege das anfang Item zum Inventar hinzu
+        inventory.push(new textAdventure.Item(jsonConfigData.User.item[0].name));
         if (gameSequenz === 0) {
             printOutput("Willkommen bei ESCAPE. <br/> Starte ein neues Spiel, gebe „start“. <br/> Laden einen Spielstand „load“.");
         }
         else {
             createNewRoom(jsonConfigData.User.currentRoom);
+            health = jsonConfigData.User.health;
             gameSequenz = 2;
         }
         getUserInput();
@@ -74,7 +87,6 @@ var textAdventure;
      * @param _userInput: String | Eingabe welche der User im Input Feld eingibt
      */
     function checkUsersChoice(_userInput) {
-        // debugger;
         // Spiel kann immer mit "q" oder "beenden" beendet werden
         if (_userInput === "q" || _userInput === "beenden") {
             printOutput(quitGame());
@@ -99,7 +111,6 @@ var textAdventure;
                 startGameRegulary(_userInput);
                 break;
             case 2:
-                currentRoom = jsonConfigData.User.currentRoom;
                 switch (_userInput) {
                     case "umschauen":
                     case "u":
@@ -125,6 +136,26 @@ var textAdventure;
                     case "o":
                         walkToEast();
                         break;
+                    case "inventar":
+                    case "i":
+                        printOutput(outputInventory());
+                        break;
+                    case "nehmen":
+                    case "t":
+                        takeItem();
+                        break;
+                    case "ablegen":
+                    case "a":
+                        dropItem();
+                        break;
+                    case "leben":
+                    case "l":
+                        printOutput(showlife());
+                        break;
+                    case "reden":
+                    case "r":
+                        ;
+                        break;
                     case "q":
                         printOutput(quitGame());
                         break;
@@ -132,13 +163,100 @@ var textAdventure;
                         break;
                 }
                 break;
+            // Item Aufnehmen
+            case 3:
+                let userInputAsNumber = +_userInput;
+                if (Number.isInteger(userInputAsNumber) && _userInput != "") {
+                    pullItemFromRoomAndPushToInventory(userInputAsNumber);
+                }
+                else {
+                    printOutput("Falsche eingabe");
+                }
+                break;
+            // Item Ablegen
+            case 4:
+                let inputAsNumber = +_userInput;
+                if (Number.isInteger(inputAsNumber) && _userInput != "") {
+                    pullItemFromInventoryAndPushToRoom(inputAsNumber);
+                }
+                else {
+                    printOutput("Falsche eingabe");
+                }
+                break;
             default:
                 break;
         }
     }
+    function showlife() {
+        return "Dein aktueller Gesundheitszustand ist: " + health + "%";
+    }
+    function pullItemFromInventoryAndPushToRoom(_inputAsNumber) {
+        for (let i = 0; i < inventory.length; i++) {
+            if (i === _inputAsNumber - 1) {
+                let item = inventory.splice(_inputAsNumber - 1, _inputAsNumber)[0];
+                // Fügt das Item im akutellen Raum in die JSON-Datei ein
+                jsonConfigData[currentRoom.name].item.push(item);
+                currentRoom.item.push(item);
+                printOutput(item.name + " abgelegt");
+            }
+        }
+        gameSequenz = 2;
+    }
+    function dropItem() {
+        let output = "";
+        // Überprüfung, ob sich im Items im Inventar befinden
+        if (inventory.length != 0) {
+            output = output + "Folgende Gegenstände hast du im Inventar";
+            for (let i = 0; i < inventory.length; i++) {
+                output = output + "<br/>" + "[" + [i + 1] + "] " + inventory[i].name;
+            }
+        }
+        else {
+            output = output + "Du hast keine Gegenstände im Inventar";
+        }
+        output = output + "<br/>Was möchtest du ablegen? <br/>Gebe die Nummer ein.";
+        printOutput(output);
+        gameSequenz = 4;
+    }
+    function pullItemFromRoomAndPushToInventory(_userInputAsNumber) {
+        for (let i = 0; i < currentRoom.item.length; i++) {
+            if (i === _userInputAsNumber - 1) {
+                let item = currentRoom.item.splice(_userInputAsNumber - 1, _userInputAsNumber)[0];
+                // Löscht des Item aus der JSON-Datei
+                jsonConfigData[currentRoom.name].item.splice(_userInputAsNumber - 1, _userInputAsNumber);
+                inventory.push(item);
+                printOutput(item.name + " aufgenommen");
+            }
+        }
+        gameSequenz = 2;
+    }
+    function takeItem() {
+        let output = "";
+        // Überprüfung, ob sich im Raum Items befinden
+        if (currentRoom.item.length != 0) {
+            output = output + "Hier befinden sich folgende Gegenstände:";
+            for (let i = 0; i < currentRoom.item.length; i++) {
+                output = output + "<br/>" + "[" + [i + 1] + "] " + currentRoom.item[i].name;
+            }
+        }
+        else {
+            output = output + "Hier befinden sich keine Gegenstände";
+        }
+        output = output + "<br/>Was möchtest du aufnehmen? <br/>Gebe die Nummer ein.";
+        printOutput(output);
+        gameSequenz = 3;
+    }
+    function outputInventory() {
+        let output = "In deinem Inventar befinden sich:";
+        for (let i = 0; i < inventory.length; i++) {
+            output = output + "<br/> - " + inventory[i].name;
+        }
+        return output;
+    }
     function startGameRegulary(_userInput) {
         // Setzt Spielername in der JSON-Datei
         jsonConfigData.User.name = _userInput;
+        gameSequenz++;
         printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
         let timerNumber = 3;
         let refreshIntervalId = setInterval(function () {
@@ -149,14 +267,15 @@ var textAdventure;
             // tslint:disable-next-line: align
         }, 700);
         setTimeout(function () {
-            gameSequenz++;
-            printOutput("Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich! <br/> [h] | hilfe ");
+            let output = "Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich! <br/> [h] | Hilfe";
+            printOutput(output);
             // tslint:disable-next-line: align
         }, 2800);
-        let bank = new textAdventure.Room(jsonConfigData.Bank.name, jsonConfigData.Bank.description, jsonConfigData.Bank.person, jsonConfigData.Bank.item, jsonConfigData.Bank.neighbour);
+        // Setzt den Anfangsraum fest
+        let bank = new textAdventure.Room(jsonConfigData.Bank.name, jsonConfigData.Bank.description, jsonConfigData.Bank.person.polizei, jsonConfigData.Bank.person.passant, jsonConfigData.Bank.person.verkaeufer, jsonConfigData.Bank.item, jsonConfigData.Bank.neighbour);
         currentRoom = bank;
-        jsonConfigData.User.currentRoom = currentRoom;
-        console.log(jsonConfigData);
+        // Setzt das Anfangsleben fest
+        health = jsonConfigData.User.health;
     }
     function loadUsersJSONData() {
         printOutput("<input id='loadFileButton' accept='.json' type='file'>");
@@ -175,13 +294,48 @@ var textAdventure;
             fr.readAsText(this.files[0]);
         });
     }
+    function outputPersonsInRoom() {
+        let output = "";
+        if (currentRoom.person.length != 0) {
+            output = output + "Hier befinden sich folgende Personen:";
+            for (let i = 0; i < currentRoom.person.length; i++) {
+                if (currentRoom.person[i] instanceof textAdventure.Police) {
+                    output = output + "<br/> Polizei | " + currentRoom.person[i].name;
+                }
+                if (currentRoom.person[i] instanceof textAdventure.Passanger) {
+                    output = output + "<br/> Passant | " + currentRoom.person[i].name;
+                }
+                if (currentRoom.person[i] instanceof textAdventure.Salesman) {
+                    output = output + "<br/> Verkäufer | " + currentRoom.person[i].name;
+                }
+            }
+        }
+        else {
+            output = output + "Hier befinden sich keine Personen";
+        }
+        return output;
+    }
+    function outputItemsInRoom() {
+        let output = "";
+        // Überprüfung, ob sich im Raum Items befinden
+        if (currentRoom.item.length != 0) {
+            output = output + "Hier befinden sich folgende Gegenstände:";
+            for (let i = 0; i < currentRoom.item.length; i++) {
+                output = output + "<br/> - " + currentRoom.item[i].name;
+            }
+        }
+        else {
+            output = output + "Hier befinden sich keine Gegenstände";
+        }
+        return output;
+    }
     /**
      * Funktion gibt den Beschreibungstext des aktuellen Raumes zurück
      *
      * @return: String | Beschreibungstext des Raumes
      */
     function lookAroundRoom() {
-        return currentRoom.description;
+        return outputItemsInRoom() + "<br/>" + outputPersonsInRoom();
     }
     /**
      * Funktion beendet das Spiel
@@ -223,10 +377,13 @@ var textAdventure;
      */
     function walkToSouth() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
-        if (currentRoom.neighbour[1] != null) {
+        if (currentRoom.neighbour[1] != null && currentRoom.neighbour[1] != "Baustelle") {
             printOutput("Du läufst nach Süden");
             let roomInSouth = currentRoom.neighbour[1];
             createNewRoom(roomInSouth);
+        }
+        else if (currentRoom.neighbour[1] === "Baustelle") {
+            printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
         }
         else {
             printOutput("In Süden befindet sich kein Raum");
@@ -237,10 +394,13 @@ var textAdventure;
      */
     function walkToNorth() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
-        if (currentRoom.neighbour[0] != null) {
+        if (currentRoom.neighbour[0] != null && currentRoom.neighbour[0] != "Baustelle") {
             printOutput("Du läufst nach Norden");
             let roomInNorth = currentRoom.neighbour[0];
             createNewRoom(roomInNorth);
+        }
+        else if (currentRoom.neighbour[0] === "Baustelle") {
+            printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
         }
         else {
             printOutput("In Norden befindet sich kein Raum");
@@ -258,10 +418,11 @@ var textAdventure;
             if (jsonConfigData.hasOwnProperty(obj)) {
                 // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
                 if (obj === _nameOfNewRoom) {
-                    let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
+                    let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person.polizei, jsonConfigData[obj].person.passant, jsonConfigData[obj].person.verkaeufer, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
                     currentRoom = theNewRoom;
                     jsonConfigData.User.currentRoom = currentRoom;
-                    printOutput(currentRoom.description);
+                    // let output: string = currentRoom.description + "<br/>" + outputItemsInRoom();
+                    printOutput(currentRoom.description + "<br/> [h] | Hilfe");
                 }
             }
         }
@@ -272,32 +433,30 @@ var textAdventure;
      * @return output: String
      */
     function outputCommands() {
-        let output = "[n] | norden <br/> [s] | süden <br/> [o] | osten <br/> [w] | westen <br/> [u] | umschauen <br> [i] | Inventar öffnen <br/> [a] | Item ablegen <br/>";
+        let output = "[n] | Norden <br/> [s] | Süden <br/> [o] | Osten <br/> [w] | Westen <br/>[u] | umschauen <br> [l] | Gesundheitszustand anzeigen <br/> [i] | Inventar öffnen <br/> ";
         if (currentRoom.person.length != 0) {
             output = output + " [r] | reden <br/>";
-            // for (let i = 0; i < currentRoom.person.length; i++) {
-            //     if (currentRoom.person[i].instanceof(Police)) {
-            //     }
-            // }
         }
-        else if (currentRoom.item.length != 0) {
+        if (currentRoom.item.length != 0) {
             output = output + "[t] | Item nehmen <br/>";
         }
-        output = output + "[q] | Spiel verlassen";
+        if (inventory.length > 0) {
+            output = output + "[a] | Item ablegen <br/>";
+        }
+        let firstTime = true;
+        for (let i = 0; i < currentRoom.person.length; i++) {
+            if (currentRoom.person[i] instanceof textAdventure.Police && firstTime) {
+                output = output + "[z] | Polizei angreifen <br/>";
+                firstTime = false;
+            }
+        }
+        output = output + "-------------------------- <br/>[q] | Spiel verlassen";
         return output;
     }
     /**
      * Funktion löst Event aus, sobald der User etwas ins Input Feld eingegeben hat und mit Enter bestätigt hat
      */
     function getUserInput() {
-        let inputField = document.getElementById("inputField");
-        inputField.addEventListener("keyup", function (_event) {
-            if (_event.key === "Enter") {
-                let inputValue = inputField.value.toLowerCase();
-                checkUsersChoice(inputValue);
-                inputField.value = "";
-            }
-        });
     }
     /**
      * Funktion fuegt den übergebenen String dem HTML-Dokument hinzu
@@ -328,20 +487,6 @@ var textAdventure;
         }
     }
     textAdventure.Person = Person;
-    class Passanger extends Person {
-        constructor(_name, _text, _text2) {
-            super(_name, _text);
-            this.text2 = _text;
-        }
-    }
-    textAdventure.Passanger = Passanger;
-    class Salesman extends Person {
-        constructor(_name, _text, _text2) {
-            super(_name, _text);
-            this.text2 = _text;
-        }
-    }
-    textAdventure.Salesman = Salesman;
     class Police extends Person {
         constructor(_name, _text, _life, _item) {
             super(_name, _text);
@@ -350,20 +495,77 @@ var textAdventure;
         }
     }
     textAdventure.Police = Police;
+    class Passanger extends Person {
+        constructor(_name, _text, _text2) {
+            super(_name, _text);
+            this.text2 = _text2;
+        }
+    }
+    textAdventure.Passanger = Passanger;
+    class Salesman extends Person {
+        constructor(_name, _text, _text2) {
+            super(_name, _text);
+            this.text2 = _text2;
+        }
+    }
+    textAdventure.Salesman = Salesman;
 })(textAdventure || (textAdventure = {}));
 var textAdventure;
 (function (textAdventure) {
     class Room {
-        constructor(_name, _description, _person, _item, _neigbour) {
+        constructor(_name, _description, _police, _passanger, _salesman, _item, _neigbour) {
             this.name = _name;
             this.description = _description;
-            this.person = _person;
+            this.police = this.createPolice(_police);
+            this.passanger = this.createPassanger(_passanger);
+            this.salesman = this.createSalesman(_salesman);
             this.item = this.buildingItems(_item);
             this.neighbour = _neigbour;
+            this.person = this.addAllPersons();
         }
-        /* Erstellt alle Items welche sich im jeweiligen Raum befinden
-        @parm:      Item Objekte
-        @return:    Array von allen Items                                */
+        createPolice(_police) {
+            let allPolice = [];
+            for (let i = 0; i < _police.length; i++) {
+                let thePliceman = new textAdventure.Police(_police[i].name, _police[i].text, _police[i].life, _police[i].item);
+                allPolice.push(thePliceman);
+            }
+            return allPolice;
+        }
+        createPassanger(_passanger) {
+            let allPassanger = [];
+            for (let i = 0; i < _passanger.length; i++) {
+                let thePassanger = new textAdventure.Passanger(_passanger[i].name, _passanger[i].text, _passanger[i].text2);
+                allPassanger.push(thePassanger);
+            }
+            return allPassanger;
+        }
+        createSalesman(_salesman) {
+            let allSalesman = [];
+            for (let i = 0; i < _salesman.length; i++) {
+                let theSalesman = new textAdventure.Salesman(_salesman[i].name, _salesman[i].text, _salesman[i].text2);
+                allSalesman.push(theSalesman);
+            }
+            return allSalesman;
+        }
+        addAllPersons() {
+            let allPersons = [];
+            for (let i = 0; i < this.police.length; i++) {
+                allPersons.push(this.police[i]);
+            }
+            for (let i = 0; i < this.passanger.length; i++) {
+                allPersons.push(this.passanger[i]);
+            }
+            for (let i = 0; i < this.salesman.length; i++) {
+                allPersons.push(this.salesman[i]);
+            }
+            return allPersons;
+        }
+        /**
+         * Erstellt alle Items welche sich im jeweiligen Raum befinden
+         *
+         * @param _item | Item Objekt
+         * @return items | Array mit allen Items
+         */
         buildingItems(_item) {
             let items = [];
             for (let i = 0; i < _item.length; i++) {

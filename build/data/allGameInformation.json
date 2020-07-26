@@ -1,0 +1,298 @@
+{
+	"User": {
+		"name": "",
+		"item": [
+			{
+				"name": "20000 Euro"
+			}
+		],
+		"currentRoom": {},
+		"health": 100
+	},
+	"Bahnhofsplatz": {
+		"name": "Bahnhofsplatz",
+		"description": "Du befindest dich am Bahnhofsplatz, schaue dich doch mal ein wenig um.",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "100 Euro"
+			},
+			{
+				"name": "Stein"
+			}
+		],
+		"neighbour": [null, "Baustelle", null, "Ludwigsplatz"]
+	},
+	"Ludwigsplatz": {
+		"name": "Ludwigsplatz",
+		"description": "Du befindest dich auf dem Ludwigsplatz, vielleicht findest du hier ja etwas interessantes.",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "5 Euro"
+			}
+		],
+		"neighbour": ["Garage", "Marktplatz", "Bahnhofsplatz", "Europaplatz"]
+	},
+	"Europaplatz": {
+		"name": "Europaplatz",
+		"description": "Das ist der Europaplatz, schaue dich doch mal ein wenig um.",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "Papier"
+			}
+		],
+		"neighbour": [null, "Apothekenplatz", "Ludwigsplatz", null]
+	},
+	"Wachplatz": {
+		"name": "Wachplatz",
+		"description": "Das ist der Wachplatz, hier sind sehr viele Polizisten unterwegs.",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "Stift"
+			}
+		],
+		"neighbour": ["Baustelle", "Friedrichsplatz", "Polizeiwache", "Marktplatz"]
+	},
+	"Marktplatz": {
+		"name": "Marktplatz",
+		"description": "Das ist der Marktplatz, schaue dich doch mal um, vielleicht findest du etwas.",
+		"person": {
+			"polizei": [
+				{ "name": "Klaus", "text": "Hallo ich bin der Polizist Klaus", "life": 100, "item": [{ "name": "Pistole" }] },
+				{ "name": "Fritz", "text": "Hallo ich bin der Polizist Fritz", "life": 100, "item": [{ "name": "Messer" }, {"name": "Pistole"}] }
+			],
+			"passant": [
+				{ "name": "Manitu", "text": "Wie geht es dir?", "text2": "Ich habe gehört die Bank wurde ausgeraubt"},
+				{ "name": "Patricia", "text": "Gehts dir nicht gut? Du siehst so blass aus.", "text2": "Die Polizei sagte vorhin, dass ein Räuber auf der Flucht sei."}
+			],
+			"verkaeufer": [
+				{ "name": "Manuel", "text": "Frisches Gemüse, zu Gutem Preis!", "text2": "Bessere Qualität bekommen Sie nirgends" },
+				{ "name": "Julian", "text": "Leckere Gewürze, schlagen Sie zu.", "text2": "Alles ist frisch, das können Sie mir glauben" }
+			]
+		},
+		"item": [
+			{
+				"name": "Schere"
+			}
+		],
+		"neighbour": ["Ludwigsplatz", "Kronenplatz", "Wachplatz", "Apothekenplatz"]
+	},
+	"Apothekenplatz": {
+		"name": "Apothekenplatz",
+		"description": "Das ist der Apothekenplatz, schaue doch mal in der Apotheke vorbei.",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "Schokolade"
+			}
+		],
+		"neighbour": ["Europaplatz", "Kolpingplatz", "Marktplatz", "Apotheke"]
+	},
+	"Friedrichsplatz": {
+		"name": "Friedrichsplatz",
+		"description": "Du befindest dich auf dem Friedrichsplatz, vielleicht findest du hier etwas interessantes",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "Garagenschlüssel"
+			}
+		],
+		"neighbour": ["Wachplatz", null, null, "Kronenplatz"]
+	},
+	"Kronenplatz": {
+		"name": "Kronenplatz",
+		"description": "Das ist der Kolpingplatz, schaue dich doch mal ein bisschen um.",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "Stock"
+			},
+			{
+				"name": "Flasche"
+			}
+		],
+		"neighbour": ["Marktplatz", "Bank", "Friedrichsplatz", "Kolpingplatz"]
+	},
+	"Kolpingplatz": {
+		"name": "Kolpingplatz",
+		"description": "Du befindest dich auf dem Kolpingplatz, vielleicht findest du hier etwas interessantes.",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "Autoschlüssel"
+			}
+		],
+		"neighbour": ["Apothekenplatz", null, "Kronenplatz", null]
+	},
+	"Bank": {
+		"name": "Bank",
+		"description": "Das ist die Bank",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "Zange"
+			},
+			{
+				"name": "Getränk"
+			},
+			{
+				"name": "Papier"
+			}
+		],
+		"neighbour": ["Kronenplatz", null, null, null]
+	},
+	"Polizeiwache": {
+		"name": "Polizeiwache",
+		"description": "Das ist die Polizeiwache",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [],
+		"neighbour": [null, null, null, "Wachplatz"]
+	},
+	"Apotheke": {
+		"name": "Apotheke",
+		"description": "Das ist die Apotheke",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [
+			{
+				"name": "Verband"
+			},
+			{
+				"name": "Hustensaft"
+			},
+			{
+				"name": "Spritze"
+			}
+		],
+		"neighbour": [null, null, "Apothekenplatz", null]
+	},
+	"Garage": {
+		"name": "Garage",
+		"description": "Das ist die Garage",
+		"person": {
+			"polizei": [
+				
+			],
+			"passant": [
+
+			],
+			"verkaeufer": [
+			
+			]
+		},
+		"item": [],
+		"neighbour": [null, "Ludwigsplatz", null, null]
+	}
+}
