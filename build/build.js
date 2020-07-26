@@ -214,32 +214,41 @@ var textAdventure;
     }
     function attackThePickedPolice(_inNumber) {
         let output = "";
-        // Durläuft alle Personen im Aktuellen Raum
-        for (let i = 0; i < getAllPersons().length; i++) {
-            // Schaut, ob die Person ein Polizist ist
-            if (getAllPersons()[i] instanceof textAdventure.Police) {
-                // Pickt sich den Polizist, welcher sich hinter der eingegebenen Nummer verbirgt
-                if (i === _inNumber - 1) {
-                    output = output + "Du hast den Polizist " + getAllPersons()[i].name + " angegriffen.<br/> Dieser ist nun bewusstlos und hat seine Gegenstände verloren. ";
+        // Leben abziehen
+        health = health - 40;
+        // Leben in der JSON-Datei Abziehen
+        jsonConfigData.User.health = health;
+        // Überprüfen, des aktuellen Lebens (Wenn unter 0, ist das Spiel verloren)
+        if (0 >= health) {
+            printOutput("Die Polizei hat im Kampf gegen dich gewonnen. Du hattest zu wenig Leben.<br/>" + gameOver());
+        }
+        else {
+            // Durläuft alle Personen im Aktuellen Raum
+            for (let i = 0; i < getAllPersons().length; i++) {
+                // Schaut, ob die Person ein Polizist ist
+                if (getAllPersons()[i] instanceof textAdventure.Police) {
+                    // Pickt sich den Polizist, welcher sich hinter der eingegebenen Nummer verbirgt
+                    if (i === _inNumber - 1) {
+                        output = output + "Du hast den Polizist " + getAllPersons()[i].name + " angegriffen.<br/> Dieser ist nun bewusstlos und hat seine Gegenstände verloren.<br/>Du hast 40% Leben Verloren";
+                    }
                 }
             }
+            // Hinzufügen der Items des Polizist zum currentRoom
+            let attackedPoliceItemsArray = jsonConfigData[currentRoom.name].person.polizei[_inNumber - 1].item;
+            for (let i = 0; i < attackedPoliceItemsArray.length; i++) {
+                let theItem = new textAdventure.Item(attackedPoliceItemsArray[i].name);
+                // Item zum Aktuellen Raum hinzufügen
+                currentRoom.item.push(theItem);
+                // Item in der JSON-Datei hinzufügen
+                jsonConfigData[currentRoom.name].item.push(theItem);
+            }
+            // Entfernt den Polizisten aus der JSON-Datei
+            jsonConfigData[currentRoom.name].person.polizei.splice(_inNumber - 1, _inNumber);
+            // Entfernt des Polizisten aus dem aktuellen Raum
+            currentRoom.police.splice(_inNumber - 1, _inNumber);
+            printOutput(output);
+            gameSequenz = 2;
         }
-        // Hinzufügen der Items des Polizist zum currentRoom
-        let attackedPoliceItemsArray = jsonConfigData[currentRoom.name].person.polizei[_inNumber - 1].item;
-        console.log(currentRoom.item);
-        for (let i = 0; i < attackedPoliceItemsArray.length; i++) {
-            let theItem = new textAdventure.Item(attackedPoliceItemsArray[i].name);
-            // Item zum Aktuellen Raum hinzufügen
-            currentRoom.item.push(theItem);
-            // Item in der JSON-Datei hinzufügen
-            jsonConfigData[currentRoom.name].item.push(theItem);
-        }
-        // Entfernt den Polizisten aus der JSON-Datei
-        jsonConfigData[currentRoom.name].person.polizei.splice(_inNumber - 1, _inNumber);
-        // Entfernt des Polizisten aus dem aktuellen Raum
-        currentRoom.police.splice(_inNumber - 1, _inNumber);
-        printOutput(output);
-        gameSequenz = 2;
     }
     function attackPolice() {
         let output = "";
@@ -268,7 +277,7 @@ var textAdventure;
                     }
                     else {
                         // @ts-ignore: Unreachable code error
-                        printOutput(getAllPersons()[i].text2);
+                        printOutput(getAllPersons()[i].name + ": " + getAllPersons()[i].text2);
                     }
                 }
                 else {
@@ -384,7 +393,7 @@ var textAdventure;
             // tslint:disable-next-line: align
         }, 700);
         setTimeout(function () {
-            let output = "Du befindest dich in der Bank und hast gerade den Schalter überfallen, flüchte so schnell wie möglich! <br/> [h] | Hilfe";
+            let output = "Du befindest dich in der Bank und hast gerade den Schalter überfallen und dabei 20000 Euro erbeutet, flüchte so schnell wie möglich! <br/> [h] | Hilfe";
             printOutput(output);
             // tslint:disable-next-line: align
         }, 2800);
@@ -472,7 +481,7 @@ var textAdventure;
             createNewRoom(roomInEast);
         }
         else {
-            printOutput("In Osten befindet sich kein Raum");
+            printOutput("Nach Osten befindet sich kein Weg.");
         }
     }
     /**
@@ -486,7 +495,7 @@ var textAdventure;
             createNewRoom(roomInWest);
         }
         else {
-            printOutput("In Westen befindet sich kein Raum");
+            printOutput("Nach Westen befindet sich kein Weg.");
         }
     }
     /**
@@ -503,7 +512,7 @@ var textAdventure;
             printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
         }
         else {
-            printOutput("In Süden befindet sich kein Raum");
+            printOutput("Nach Süden befindet sich kein Weg.");
         }
     }
     /**
@@ -520,7 +529,7 @@ var textAdventure;
             printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
         }
         else {
-            printOutput("In Norden befindet sich kein Raum");
+            printOutput("Nach Norden befindet sich kein Weg.");
         }
     }
     /**
@@ -588,6 +597,10 @@ var textAdventure;
             allPersons.push(currentRoom.salesman[i]);
         }
         return allPersons;
+    }
+    function gameOver() {
+        gameSequenz = null;
+        return "Das Spiel ist vorbei";
     }
     /**
      * Funktion löst Event aus, sobald der User etwas ins Input Feld eingegeben hat und mit Enter bestätigt hat
