@@ -319,7 +319,7 @@ var textAdventure;
     function pullItemFromInventoryAndPushToRoom(_inputAsNumber) {
         for (let i = 0; i < inventory.length; i++) {
             if (i === _inputAsNumber - 1) {
-                let item = inventory.splice(_inputAsNumber - 1, _inputAsNumber)[0];
+                let item = inventory.splice(_inputAsNumber - 1, 1)[0];
                 // Fügt das Item im akutellen Raum in die JSON-Datei ein
                 jsonConfigData[currentRoom.name].item.push(item);
                 currentRoom.item.push(item);
@@ -336,22 +336,55 @@ var textAdventure;
             for (let i = 0; i < inventory.length; i++) {
                 output = output + "<br/>" + "[" + [i + 1] + "] " + inventory[i].name;
             }
+            output = output + "<br/>Was möchtest du ablegen? <br/>Gebe die Nummer ein.";
+            gameSequenz = 4;
         }
         else {
-            output = output + "Du hast keine Gegenstände im Inventar";
+            output = output + "Du kannst nichts ablegen, da du keine Gegenstände im Inventar hast.";
         }
-        output = output + "<br/>Was möchtest du ablegen? <br/>Gebe die Nummer ein.";
         printOutput(output);
-        gameSequenz = 4;
     }
     function pullItemFromRoomAndPushToInventory(_userInputAsNumber) {
         for (let i = 0; i < currentRoom.item.length; i++) {
             if (i === _userInputAsNumber - 1) {
-                let item = currentRoom.item.splice(_userInputAsNumber - 1, _userInputAsNumber)[0];
+                // Nimmt das Item aus dem currentRoom heraus und speichert es in der Variable item
+                let item = currentRoom.item.splice(_userInputAsNumber - 1, 1)[0];
                 // Löscht des Item aus der JSON-Datei
-                jsonConfigData[currentRoom.name].item.splice(_userInputAsNumber - 1, _userInputAsNumber);
-                inventory.push(item);
-                printOutput(item.name + " aufgenommen");
+                jsonConfigData[currentRoom.name].item.splice(_userInputAsNumber - 1, 1);
+                let output = "";
+                // Überprüft, ob das Item eine Spritze, Verband oder Hustensaft ist
+                if (item.name === "Spritze") {
+                    if (health + 50 < 100) {
+                        health = health + 50;
+                    }
+                    else {
+                        health = 100;
+                    }
+                    output = output + "<br/>Leben um 50% geheilt.";
+                }
+                else if (item.name === "Verband") {
+                    if (health + 25 < 100) {
+                        health = health + 25;
+                    }
+                    else {
+                        health = 100;
+                    }
+                    output = output + "<br/>Leben um 25% geheilt.";
+                }
+                else if (item.name === "Hustensaft") {
+                    if (health + 5 < 100) {
+                        health = health + 5;
+                    }
+                    else {
+                        health = 100;
+                    }
+                    output = output + "<br/>Leben um 5% geheilt.";
+                }
+                else {
+                    // Pusth das erstellte Item ins Inventar (wennes keine Spritze, Verband oder Hustensaft ist)
+                    inventory.push(item);
+                }
+                printOutput(item.name + " aufgenommen" + output);
             }
         }
         gameSequenz = 2;
@@ -359,18 +392,19 @@ var textAdventure;
     function takeItem() {
         let output = "";
         // Überprüfung, ob sich im Raum Items befinden
+        console.log(currentRoom.item.length);
         if (currentRoom.item.length != 0) {
             output = output + "Hier befinden sich folgende Gegenstände:";
             for (let i = 0; i < currentRoom.item.length; i++) {
                 output = output + "<br/>" + "[" + [i + 1] + "] " + currentRoom.item[i].name;
             }
+            output = output + "<br/>Was möchtest du aufnehmen? <br/>Gebe die Nummer ein.";
+            gameSequenz = 3;
         }
         else {
-            output = output + "Hier befinden sich keine Gegenstände";
+            output = output + "Du kannst nichts aufnehmen, da sich hier kein Gegenstände befinden.";
         }
-        output = output + "<br/>Was möchtest du aufnehmen? <br/>Gebe die Nummer ein.";
         printOutput(output);
-        gameSequenz = 3;
     }
     function outputInventory() {
         let output = "In deinem Inventar befinden sich:";
@@ -520,13 +554,29 @@ var textAdventure;
      */
     function walkToNorth() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
-        if (currentRoom.neighbour[0] != null && currentRoom.neighbour[0] != "Baustelle") {
+        if (currentRoom.neighbour[0] != null && currentRoom.neighbour[0] != "Baustelle" && currentRoom.neighbour[0] != "Garage") {
             printOutput("Du läufst nach Norden");
             let roomInNorth = currentRoom.neighbour[0];
             createNewRoom(roomInNorth);
         }
         else if (currentRoom.neighbour[0] === "Baustelle") {
             printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
+        }
+        else if (currentRoom.neighbour[0] === "Garage") {
+            // Überprüft, ob der Garagenschlüssel im Inventar ist
+            let nokey = true;
+            for (let i = 0; i < inventory.length; i++) {
+                if (inventory[i].name === "Garagenschlüssel") {
+                    printOutput("Garage mit Garagenschlüssel geöffnet");
+                    // let roomInNorth: string = currentRoom.neighbour[0];
+                    // createNewRoom(roomInNorth);
+                    nokey = false;
+                    printOutput(gameWin());
+                }
+            }
+            if (nokey) {
+                printOutput("Um in die Garage zu gelangen, brauchst du den Garagenschlüssel in deinem Inventar.");
+            }
         }
         else {
             printOutput("Nach Norden befindet sich kein Weg.");
@@ -601,6 +651,10 @@ var textAdventure;
     function gameOver() {
         gameSequenz = null;
         return "Das Spiel ist vorbei";
+    }
+    function gameWin() {
+        gameSequenz = null;
+        return "Herzlichen Glückwunsch du wurdest nicht von der Polizei geschnappt und hast gewonnen!";
     }
     /**
      * Funktion löst Event aus, sobald der User etwas ins Input Feld eingegeben hat und mit Enter bestätigt hat
