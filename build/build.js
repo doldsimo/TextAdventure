@@ -5,7 +5,7 @@ var textAdventure;
      * Funktion Lädt Json-Datei
      */
     async function loadJsonData() {
-        let content = await load("data/crossroads/allCrossroads.json");
+        let content = await load("data/allGameInformation.json");
         textAdventure.startProgram(content);
     }
     textAdventure.loadJsonData = loadJsonData;
@@ -13,7 +13,7 @@ var textAdventure;
      * Funktion Speichert die Json-Datei
      */
     async function saveJsonData(_content) {
-        save(JSON.stringify(_content), "data/crossroads/allCrossroads_New.json");
+        save(JSON.stringify(_content), "data/allGameInformation_New.json");
     }
     textAdventure.saveJsonData = saveJsonData;
     /**
