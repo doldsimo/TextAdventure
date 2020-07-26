@@ -6,7 +6,7 @@ namespace textAdventure {
         police: Police[];
         passanger: Passanger[];
         salesman: Salesman[];
-        person: Person[];
+        // person: Person[];
         item: Item[];
         neighbour: string[];
 
@@ -19,7 +19,7 @@ namespace textAdventure {
             this.salesman = this.createSalesman(_salesman);
             this.item = this.buildingItems(_item);
             this.neighbour = _neigbour;
-            this.person = this.addAllPersons();
+            // this.person = this.addAllPersons();
         }
 
         private createPolice(_police: Police[]): Police[] {
@@ -49,21 +49,6 @@ namespace textAdventure {
             }
             return allSalesman;
         }
-
-        private addAllPersons(): Person[] {
-            let allPersons: Person[] = [];
-            for (let i: number = 0; i < this.police.length; i++) {
-                allPersons.push(this.police[i]);
-            }
-            for (let i: number = 0; i < this.passanger.length; i++) {
-                allPersons.push(this.passanger[i]);
-            }
-            for (let i: number = 0; i < this.salesman.length; i++) {
-                allPersons.push(this.salesman[i]);
-            }
-            return allPersons;
-        }
-
 
         /**
          * Erstellt alle Items welche sich im jeweiligen Raum befinden 

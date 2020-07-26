@@ -112,8 +112,13 @@ namespace textAdventure {
                         break;
                     case "reden":
                     case "r":
-                        ;
+                        talkWithPerson();
                         break;
+                    case "angreifen":
+                    case "k":
+                        attackPolice();
+                        break;
+                    case "verlassen":
                     case "q":
                         printOutput(quitGame());
                         break;
@@ -139,11 +144,127 @@ namespace textAdventure {
                     printOutput("Falsche eingabe");
                 }
                 break;
+            // Mit Person reden
+            case 5:
+                let inputNumber: number = +_userInput;
+                if (Number.isInteger(inputNumber) && _userInput != "") {
+                    talkWithTheRightPerson(inputNumber);
+                } else {
+                    printOutput("Falsche eingabe");
+                }
+                break;
+            // Polizei angreifen
+            case 6:
+                let inNumber: number = +_userInput;
+                if (Number.isInteger(inNumber) && _userInput != "") {
+                    attackThePickedPolice(inNumber);
+                } else {
+                    printOutput("Falsche eingabe");
+                }
+                break;
             default:
                 break;
         }
     }
 
+    function attackThePickedPolice(_inNumber: number): void {
+        let output: string = "";
+        // Durläuft alle Personen im Aktuellen Raum
+        for (let i: number = 0; i < getAllPersons().length; i++) {
+            // Schaut, ob die Person ein Polizist ist
+            if (getAllPersons()[i] instanceof Police) {
+                // Pickt sich den Polizist, welcher sich hinter der eingegebenen Nummer verbirgt
+                if (i === _inNumber - 1) {
+                    output = output + "Du hast den Polizist " + getAllPersons()[i].name + " angegriffen.<br/> Dieser ist nun bewusstlos und hat seine Gegenstände verloren. ";
+                }
+            }
+        }
+
+        // Hinzufügen der Items des Polizist zum currentRoom
+        let attackedPoliceItemsArray: Item[] = jsonConfigData[currentRoom.name].person.polizei[_inNumber - 1].item;
+        console.log(currentRoom.item);
+        for (let i: number = 0; i < attackedPoliceItemsArray.length; i++) {
+            let theItem: Item = new Item(attackedPoliceItemsArray[i].name);
+            // Item zum Aktuellen Raum hinzufügen
+            currentRoom.item.push(theItem);
+            // Item in der JSON-Datei hinzufügen
+            jsonConfigData[currentRoom.name].item.push(theItem);
+        }
+
+        // Entfernt den Polizisten aus der JSON-Datei
+        jsonConfigData[currentRoom.name].person.polizei.splice(_inNumber - 1, _inNumber);
+        // Entfernt des Polizisten aus dem aktuellen Raum
+        currentRoom.police.splice(_inNumber - 1, _inNumber);
+
+        printOutput(output);
+        gameSequenz = 2;
+    }
+
+    function attackPolice(): void {
+        let output: string = "";
+        // Überprüft, ob ein im aktuellen Raum ist
+        if (currentRoom.police.length != 0) {
+            output = output + "Welchen Polizisten möchtest du angreifen?";
+            for (let i: number = 0; i < getAllPersons().length; i++) {
+                if (getAllPersons()[i] instanceof Police) {
+                    output = output + "<br/>" + "[" + [i + 1] + "]" + " Polizei | " + getAllPersons()[i].name;
+                }
+            }
+            output = output + "<br/>Gebe die Nummer ein";
+        } else {
+            output = output + "Hier befindet sich kein Polizist.";
+        }
+        printOutput(output);
+        gameSequenz = 6;
+    }
+
+    function talkWithTheRightPerson(_inputNumber: number): void {
+        for (let i: number = 0; i < getAllPersons().length; i++) {
+            if (i === _inputNumber - 1) {
+                if (getAllPersons()[i] instanceof Salesman || getAllPersons()[i] instanceof Passanger) {
+                    if ((Math.floor(Math.random() * Math.floor(2))) === 1) {
+                        printOutput(getAllPersons()[i].text);
+                    } else {
+                        // @ts-ignore: Unreachable code error
+                        printOutput(getAllPersons()[i].text2);
+                    }
+                } else {
+                    printOutput(getAllPersons()[i].name + ": " + getAllPersons()[i].text);
+                }
+                console.log(getAllPersons()[i]);
+            }
+        }
+        gameSequenz = 2;
+    }
+
+    function talkWithPerson(): void {
+        let output: string = "";
+        if (getAllPersons().length != 0) {
+            output = output + "Mit wem möchtest du Reden?";
+            for (let i: number = 0; i < getAllPersons().length; i++) {
+                if (getAllPersons()[i] instanceof Police) {
+                    output = output + "<br/>" + "[" + [i + 1] + "]" + " Polizei | " + getAllPersons()[i].name;
+                }
+                if (getAllPersons()[i] instanceof Passanger) {
+                    output = output + "<br/>" + "[" + [i + 1] + "]" + " Passant | " + getAllPersons()[i].name;
+                }
+                if (getAllPersons()[i] instanceof Salesman) {
+                    output = output + "<br/>" + "[" + [i + 1] + "]" + " Verkäufer | " + getAllPersons()[i].name;
+                }
+            }
+        }
+        output = output + "<br/>Gebe die Nummer ein";
+        printOutput(output);
+        gameSequenz = 5;
+    }
+
+
+
+    /**
+     * Funktion git den Aktuellen Lebenszustand des Spielers zurück
+     * 
+     * @return: string | Lebenszustand des Spielers
+     */
     function showlife(): string {
         return "Dein aktueller Gesundheitszustand ist: " + health + "%";
     }
@@ -260,17 +381,17 @@ namespace textAdventure {
 
     function outputPersonsInRoom(): string {
         let output: string = "";
-        if (currentRoom.person.length != 0) {
+        if (getAllPersons().length != 0) {
             output = output + "Hier befinden sich folgende Personen:";
-            for (let i: number = 0; i < currentRoom.person.length; i++) {
-                if (currentRoom.person[i] instanceof Police) {
-                    output = output + "<br/> Polizei | " + currentRoom.person[i].name;
+            for (let i: number = 0; i < getAllPersons().length; i++) {
+                if (getAllPersons()[i] instanceof Police) {
+                    output = output + "<br/> Polizei | " + getAllPersons()[i].name;
                 }
-                if (currentRoom.person[i] instanceof Passanger) {
-                    output = output + "<br/> Passant | " + currentRoom.person[i].name;
+                if (getAllPersons()[i] instanceof Passanger) {
+                    output = output + "<br/> Passant | " + getAllPersons()[i].name;
                 }
-                if (currentRoom.person[i] instanceof Salesman) {
-                    output = output + "<br/> Verkäufer | " + currentRoom.person[i].name;
+                if (getAllPersons()[i] instanceof Salesman) {
+                    output = output + "<br/> Verkäufer | " + getAllPersons()[i].name;
                 }
             }
         } else {
@@ -404,7 +525,7 @@ namespace textAdventure {
      */
     function outputCommands(): string {
         let output: string = "[n] | Norden <br/> [s] | Süden <br/> [o] | Osten <br/> [w] | Westen <br/>[u] | umschauen <br> [l] | Gesundheitszustand anzeigen <br/> [i] | Inventar öffnen <br/> ";
-        if (currentRoom.person.length != 0) {
+        if (getAllPersons().length != 0) {
             output = output + " [r] | reden <br/>";
         }
         if (currentRoom.item.length != 0) {
@@ -414,15 +535,39 @@ namespace textAdventure {
             output = output + "[a] | Item ablegen <br/>";
         }
         let firstTime: boolean = true;
-        for (let i: number = 0; i < currentRoom.person.length; i++) {
-            if (currentRoom.person[i] instanceof Police && firstTime) {
-                output = output + "[z] | Polizei angreifen <br/>";
+        for (let i: number = 0; i < getAllPersons().length; i++) {
+            if (getAllPersons()[i] instanceof Police && firstTime) {
+                output = output + "[k] | Polizei angreifen <br/>";
                 firstTime = false;
             }
         }
         output = output + "-------------------------- <br/>[q] | Spiel verlassen";
         return output;
     }
+
+
+    /**
+     * Funktion fasst alle Polizisten, Passanten und Verkäufer im Akutellen Raum 
+     * in ein Personen Array zusammen und gibt dieses zurück
+     * 
+     * @retrun allPersons: Person[] | Enthält alle Personen
+     */
+    function getAllPersons(): Person[] {
+        let allPersons: Person[] = [];
+
+        for (let i: number = 0; i < currentRoom.police.length; i++) {
+            allPersons.push(currentRoom.police[i]);
+        }
+        for (let i: number = 0; i < currentRoom.passanger.length; i++) {
+            allPersons.push(currentRoom.passanger[i]);
+        }
+        for (let i: number = 0; i < currentRoom.salesman.length; i++) {
+            allPersons.push(currentRoom.salesman[i]);
+        }
+        return allPersons;
+    }
+
+
 
     /**
      * Funktion löst Event aus, sobald der User etwas ins Input Feld eingegeben hat und mit Enter bestätigt hat
