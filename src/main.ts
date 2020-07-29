@@ -4,6 +4,7 @@ namespace textAdventure {
     let jsonConfigData: any = []; // Json Datei
 
     let currentRoom: Room; // Akuteller Raum 
+    let money: Item; // Akutelles Geld
     let inventory: Item[] = []; // Inventar 
     let health: number; // Lebensanzeige
 
@@ -17,6 +18,7 @@ namespace textAdventure {
             let inputValue: string = inputField.value.toLowerCase();
             checkUsersChoice(inputValue);
             inputField.value = "";
+            // console.log(jsonConfigData);
         }
     });
 
@@ -28,9 +30,12 @@ namespace textAdventure {
     export function startProgram(_content: JSONObject): void {
         jsonConfigData = _content;
         // Fuege das anfang Item zum Inventar hinzu
-        inventory.push(new Item(jsonConfigData.User.item[0].name));
+        // inventory.push(new Item(jsonConfigData.User.item[0].name));
         if (gameSequenz === 0) {
             printOutput("Willkommen bei ESCAPE. <br/> Starte ein neues Spiel, gebe „start“. <br/> Laden einen Spielstand „load“.");
+            //Fuege das Geld der JSON Datei in die Money Variable und ins Inventar ein
+            money = new Item(jsonConfigData.User.item[0].name);
+            inventory.push(money);
         } else {
             createNewRoom(jsonConfigData.User.currentRoom);
             health = jsonConfigData.User.health;
@@ -101,6 +106,8 @@ namespace textAdventure {
                     case "nehmen":
                     case "t":
                         takeItem();
+                        // console.log(jsonConfigData);
+                        // debugger;
                         break;
                     case "ablegen":
                     case "a":
@@ -128,6 +135,9 @@ namespace textAdventure {
                 break;
             // Item Aufnehmen
             case 3:
+                // console.log(currentRoom);
+                // console.log(jsonConfigData);
+                // console.log(inventory);
                 let userInputAsNumber: number = +_userInput;
                 if (Number.isInteger(userInputAsNumber) && _userInput != "") {
                     pullItemFromRoomAndPushToInventory(userInputAsNumber);
@@ -277,6 +287,7 @@ namespace textAdventure {
         for (let i: number = 0; i < inventory.length; i++) {
             if (i === _inputAsNumber - 1) {
                 let item: Item = inventory.splice(_inputAsNumber - 1, 1)[0];
+                jsonConfigData.User.item.splice(_inputAsNumber - 1, 1);
                 // Fügt das Item im akutellen Raum in die JSON-Datei ein
                 jsonConfigData[currentRoom.name].item.push(item);
                 currentRoom.item.push(item);
@@ -309,10 +320,41 @@ namespace textAdventure {
                 let item: Item = currentRoom.item.splice(_userInputAsNumber - 1, 1)[0];
                 // Löscht des Item aus der JSON-Datei
                 jsonConfigData[currentRoom.name].item.splice(_userInputAsNumber - 1, 1);
-
                 let output: string = "";
-                // Überprüft, ob das Item eine Spritze, Verband oder Hustensaft ist
-                if (item.name === "Spritze") {
+                //Überprüft, ob das Item Geld ist, wenn ja wird es zusammenaddiert
+                if ((new RegExp(" Euro")).test(item.name) || (new RegExp(" EURO")).test(item.name)) {
+
+                    // Durchläuft das Akutelle Inventar
+                    let oldInventoryLength: number = inventory.length;
+                    let oldInventory: Item[] = inventory;
+                    // debugger;
+                    for (let i: number = 0; i < oldInventoryLength; i++) {
+                        // Wenn sich  Geld im Inventar befindet 
+                        console.log((new RegExp(" Euro")).test(oldInventory[i].name));
+                        if ((new RegExp(" Euro")).test(oldInventory[i].name)) {
+                            let oldMoneyItem: Item = inventory.splice(i, 1)[i];
+                            let oldMoney: number = +oldMoneyItem.name.split(" ")[0];
+
+                            let pickedMoney: number = +item.name.split(" ")[0];
+
+                            let newMoneyValue: number = oldMoney + pickedMoney;
+                            let newMoney: Item = new Item(newMoneyValue + " Euro");
+
+                            //Entfernen des Alten Geld Items
+                            inventory.slice(i, 1);
+                            //Hinzufügen des neuen Geld Items (mit neuem Geld wert)
+                            inventory.unshift(newMoney);
+                            break;
+                        } else {
+                            // Befindet sich noch kein Geld im Invantar oder Aktuelles Item ist kein Geld
+                            inventory.unshift(item);
+                            break;
+                        }
+                    }
+                    if (inventory.length === 0) {
+                        inventory.unshift(item);
+                    }
+                } else if (item.name === "Spritze") {
                     if (health + 50 < 100) {
                         health = health + 50;
                     } else {
@@ -334,6 +376,7 @@ namespace textAdventure {
                     }
                     output = output + "<br/>Leben um 5% geheilt.";
                 } else {
+                    console.log("Ist in der letzten If");
                     // Pusth das erstellte Item ins Inventar (wennes keine Spritze, Verband oder Hustensaft ist)
                     inventory.push(item);
                 }
@@ -341,12 +384,12 @@ namespace textAdventure {
             }
         }
         gameSequenz = 2;
+        console.log(inventory);
     }
 
     function takeItem(): void {
         let output: string = "";
         // Überprüfung, ob sich im Raum Items befinden
-        console.log(currentRoom.item.length);
         if (currentRoom.item.length != 0) {
             output = output + "Hier befinden sich folgende Gegenstände:";
             for (let i: number = 0; i < currentRoom.item.length; i++) {
