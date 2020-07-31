@@ -254,7 +254,6 @@ namespace textAdventure {
                 } else {
                     printOutput(getAllPersons()[i].name + ": " + getAllPersons()[i].text);
                 }
-                console.log(getAllPersons()[i]);
             }
         }
         gameSequenz = 2;
@@ -337,7 +336,6 @@ namespace textAdventure {
                     // debugger;
                     for (let i: number = 0; i < oldInventoryLength; i++) {
                         // Wenn sich  Geld im Inventar befindet 
-                        console.log((new RegExp(" Euro")).test(oldInventory[i].name));
                         if ((new RegExp(" Euro")).test(oldInventory[i].name)) {
                             let oldMoneyItem: Item = inventory.splice(i, 1)[i];
                             let oldMoney: number = +oldMoneyItem.name.split(" ")[0];
@@ -383,7 +381,6 @@ namespace textAdventure {
                     }
                     output = output + "<br/>Leben um 5% geheilt.";
                 } else {
-                    console.log("Ist in der letzten If");
                     // Pusth das erstellte Item ins Inventar (wennes keine Spritze, Verband oder Hustensaft ist)
                     inventory.push(item);
                 }
@@ -391,7 +388,6 @@ namespace textAdventure {
             }
         }
         gameSequenz = 2;
-        console.log(inventory);
     }
 
     function takeItem(): void {
@@ -675,7 +671,25 @@ namespace textAdventure {
     }
     function gameWin(): string {
         gameSequenz = null;
-        return "Herzlichen Glückwunsch du wurdest nicht von der Polizei geschnappt und hast gewonnen!";
+        let gameWinText: string = "Herzlichen Glückwunsch du hast Gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden<br/>in dem du dich verstecken kannst! <br/>";
+        // Überprüft, ob überhaupt Geld im Inventar ist
+        if (!((new RegExp(" Euro")).test(inventory[0].name))) {
+            gameWinText = gameWinText + "Leider hast du kein Geld erbeutet.";
+        }
+        // Überprüft wie viel Geld im Inventar ist und gibt jenachem unterschiedliche ausgaben aus
+        if ((new RegExp(" Euro")).test(inventory[0].name)) {
+            gameWinText = gameWinText + "Du hast " + inventory[0].name + " von maximal 37000 Euro erbeutet. <br/>";
+            let money: number = +inventory[0].name.split(" ")[0];
+            if (money > 35000)
+                gameWinText = gameWinText + "Mit deinem Geld kaufst du in einem anderen Land ein Haus.";
+            else if (money > 25000)
+                gameWinText = gameWinText + "Mit deinem Geld kaufst du dir ein Teures Auto und führst ein schönes Leben.";
+            else if (money > 15000)
+                gameWinText = gameWinText + "Mit deinem Geld kaufst du dir eine Rolex und lebst dein Leben normal weiter.";
+            else if (money > 5000)
+                gameWinText = gameWinText + "Mit deinem Geld lebst du normal weiter, da es nicht für größere Ausgaben reicht.";
+        }
+        return gameWinText;
     }
 
 
