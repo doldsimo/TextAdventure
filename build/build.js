@@ -10,13 +10,6 @@ var textAdventure;
     }
     textAdventure.loadJsonData = loadJsonData;
     /**
-     * Funktion Speichert die Json-Datei
-     */
-    async function saveJsonData(_content) {
-        save(JSON.stringify(_content), "data/allGameInformation_New.json");
-    }
-    textAdventure.saveJsonData = saveJsonData;
-    /**
      * Funktion lädt die JSON-Datei und gibt diese zurück
      *
      * @param _filename: String | Name der JSON-Datei, welche gealden werden soll
@@ -54,7 +47,7 @@ var textAdventure;
 var textAdventure;
 (function (textAdventure) {
     let gameSequenz = 0; // Spiel Sequenz in welcher sich der Spieler befindet
-    let jsonConfigData = []; // Json Datei
+    let jsonConfigData; // Json Datei
     let currentRoom; // Akuteller Raum 
     let money; // Akutelles Geld
     let inventory = []; // Inventar 
@@ -256,15 +249,18 @@ var textAdventure;
                 }
             }
             // Hinzufügen der Items des Polizist zum currentRoom
+            // @ts-ignore: Unreachable code error
             let attackedPoliceItemsArray = jsonConfigData[currentRoom.name].person.polizei[_inNumber - 1].item;
             for (let i = 0; i < attackedPoliceItemsArray.length; i++) {
                 let theItem = new textAdventure.Item(attackedPoliceItemsArray[i].name);
                 // Item zum Aktuellen Raum hinzufügen
                 currentRoom.item.push(theItem);
                 // Item in der JSON-Datei hinzufügen
+                // @ts-ignore: Unreachable code error
                 jsonConfigData[currentRoom.name].item.push(theItem);
             }
             // Entfernt den Polizisten aus der JSON-Datei
+            // @ts-ignore: Unreachable code error
             jsonConfigData[currentRoom.name].person.polizei.splice(_inNumber - 1, _inNumber);
             // Entfernt des Polizisten aus dem aktuellen Raum
             currentRoom.police.splice(_inNumber - 1, _inNumber);
@@ -343,6 +339,7 @@ var textAdventure;
                 let item = inventory.splice(_inputAsNumber - 1, 1)[0];
                 jsonConfigData.User.item.splice(_inputAsNumber - 1, 1);
                 // Fügt das Item im akutellen Raum in die JSON-Datei ein
+                // @ts-ignore: Unreachable code error
                 jsonConfigData[currentRoom.name].item.push(item);
                 currentRoom.item.push(item);
                 printOutput(item.name + " abgelegt");
@@ -372,6 +369,7 @@ var textAdventure;
                 // Nimmt das Item aus dem currentRoom heraus und speichert es in der Variable item
                 let item = currentRoom.item.splice(_userInputAsNumber - 1, 1)[0];
                 // Löscht des Item aus der JSON-Datei
+                // @ts-ignore: Unreachable code error
                 jsonConfigData[currentRoom.name].item.splice(_userInputAsNumber - 1, 1);
                 let output = "";
                 //Überprüft, ob das Item Geld ist, wenn ja wird es zusammenaddiert
@@ -650,6 +648,7 @@ var textAdventure;
             if (jsonConfigData.hasOwnProperty(obj)) {
                 // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
                 if (obj === _nameOfNewRoom) {
+                    // @ts-ignore: Unreachable code error
                     let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person.polizei, jsonConfigData[obj].person.passant, jsonConfigData[obj].person.verkaeufer, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
                     currentRoom = theNewRoom;
                     jsonConfigData.User.currentRoom = currentRoom.name;

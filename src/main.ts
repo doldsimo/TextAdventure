@@ -1,7 +1,7 @@
 
 namespace textAdventure {
     let gameSequenz: number = 0; // Spiel Sequenz in welcher sich der Spieler befindet
-    let jsonConfigData: any = []; // Json Datei
+    let jsonConfigData: JSONData; // Json Datei
 
     let currentRoom: Room; // Akuteller Raum 
     let money: Item; // Akutelles Geld
@@ -10,9 +10,7 @@ namespace textAdventure {
 
     loadJsonData();
 
-
     let inputField: HTMLInputElement = document.getElementById("inputField") as HTMLInputElement;
-
     inputField.addEventListener("keyup", function (_event: KeyboardEvent): void {
         if (_event.key === "Enter") {
             let inputValue: string = inputField.value.toLowerCase();
@@ -205,15 +203,18 @@ namespace textAdventure {
                 }
             }
             // Hinzufügen der Items des Polizist zum currentRoom
+            // @ts-ignore: Unreachable code error
             let attackedPoliceItemsArray: Item[] = jsonConfigData[currentRoom.name].person.polizei[_inNumber - 1].item;
             for (let i: number = 0; i < attackedPoliceItemsArray.length; i++) {
                 let theItem: Item = new Item(attackedPoliceItemsArray[i].name);
                 // Item zum Aktuellen Raum hinzufügen
                 currentRoom.item.push(theItem);
                 // Item in der JSON-Datei hinzufügen
+                // @ts-ignore: Unreachable code error
                 jsonConfigData[currentRoom.name].item.push(theItem);
             }
             // Entfernt den Polizisten aus der JSON-Datei
+            // @ts-ignore: Unreachable code error
             jsonConfigData[currentRoom.name].person.polizei.splice(_inNumber - 1, _inNumber);
             // Entfernt des Polizisten aus dem aktuellen Raum
             currentRoom.police.splice(_inNumber - 1, _inNumber);
@@ -295,6 +296,7 @@ namespace textAdventure {
                 let item: Item = inventory.splice(_inputAsNumber - 1, 1)[0];
                 jsonConfigData.User.item.splice(_inputAsNumber - 1, 1);
                 // Fügt das Item im akutellen Raum in die JSON-Datei ein
+                // @ts-ignore: Unreachable code error
                 jsonConfigData[currentRoom.name].item.push(item);
                 currentRoom.item.push(item);
                 printOutput(item.name + " abgelegt");
@@ -325,6 +327,7 @@ namespace textAdventure {
                 // Nimmt das Item aus dem currentRoom heraus und speichert es in der Variable item
                 let item: Item = currentRoom.item.splice(_userInputAsNumber - 1, 1)[0];
                 // Löscht des Item aus der JSON-Datei
+                // @ts-ignore: Unreachable code error
                 jsonConfigData[currentRoom.name].item.splice(_userInputAsNumber - 1, 1);
                 let output: string = "";
                 //Überprüft, ob das Item Geld ist, wenn ja wird es zusammenaddiert
@@ -605,6 +608,7 @@ namespace textAdventure {
             if (jsonConfigData.hasOwnProperty(obj)) {
                 // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
                 if (obj === _nameOfNewRoom) {
+                    // @ts-ignore: Unreachable code error
                     let theNewRoom: Room = new Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person.polizei, jsonConfigData[obj].person.passant, jsonConfigData[obj].person.verkaeufer, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
                     currentRoom = theNewRoom;
                     jsonConfigData.User.currentRoom = currentRoom.name;
@@ -613,7 +617,6 @@ namespace textAdventure {
                 }
             }
         }
-
     }
 
     /**

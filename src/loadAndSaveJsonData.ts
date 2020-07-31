@@ -1,5 +1,4 @@
 namespace textAdventure {
-
     /**
      * Funktion Lädt Json-Datei
      */
@@ -7,13 +6,6 @@ namespace textAdventure {
         let content: JSONData = await load("data/allGameInformation.json");
         startProgram(content);
     }
-    /**
-     * Funktion Speichert die Json-Datei
-     */
-    export async function saveJsonData(_content: JSONData): Promise<void> {
-        save(JSON.stringify(_content), "data/allGameInformation_New.json");
-    }
-
     /**
      * Funktion lädt die JSON-Datei und gibt diese zurück 
      * 
@@ -33,7 +25,7 @@ namespace textAdventure {
         return (json);
     }
 
-    export function save(_content: string, _filename: string): void {
+    export function save(_content: JSONData, _filename: string): void {
         //JSON-Objekt in Text umwandeln
         let myJson: string = JSON.stringify(_content);
         console.log(_content.toString());

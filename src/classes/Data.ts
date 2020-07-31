@@ -6,6 +6,7 @@ namespace textAdventure {
     export interface JSONArray extends Array<JSONValue> { }
     export type JSONObject = { [key: string]: JSON };
 
+
     export interface JSONData {
         User: UserInformation;
         Bahnhofsplatz: DataRoom;
