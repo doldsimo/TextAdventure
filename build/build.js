@@ -291,15 +291,15 @@ var textAdventure;
             if (i === _inputNumber - 1) {
                 if (getAllPersons()[i] instanceof textAdventure.Salesman || getAllPersons()[i] instanceof textAdventure.Passanger) {
                     if ((Math.floor(Math.random() * Math.floor(2))) === 1) {
-                        printOutput(getAllPersons()[i].text);
+                        printOutput(getAllPersons()[i].name + ": " + "<i>" + getAllPersons()[i].text + "</i>");
                     }
                     else {
                         // @ts-ignore: Unreachable code error
-                        printOutput(getAllPersons()[i].name + ": " + getAllPersons()[i].text2);
+                        printOutput(getAllPersons()[i].name + ": " + "<i>" + getAllPersons()[i].text2 + "</i>");
                     }
                 }
                 else {
-                    printOutput(getAllPersons()[i].name + ": " + getAllPersons()[i].text);
+                    printOutput(getAllPersons()[i].name + ": " + "<i>" + getAllPersons()[i].text + "</i>");
                 }
             }
         }
@@ -342,7 +342,7 @@ var textAdventure;
                 // @ts-ignore: Unreachable code error
                 jsonConfigData[currentRoom.name].item.push(item);
                 currentRoom.item.push(item);
-                printOutput(item.name + " abgelegt");
+                printOutput("<p class='red'>&nbsp;- " + item.name + " abgelegt <p/>");
             }
         }
         gameSequenz = 2;
@@ -433,7 +433,7 @@ var textAdventure;
                     // Pusth das erstellte Item ins Inventar (wennes keine Spritze, Verband oder Hustensaft ist)
                     inventory.push(item);
                 }
-                printOutput(item.name + " aufgenommen" + output);
+                printOutput("<p class='green'>&nbsp;+ " + item.name + " aufgenommen<p/>");
             }
         }
         gameSequenz = 2;
@@ -470,12 +470,12 @@ var textAdventure;
         let refreshIntervalId = setInterval(function () {
             if (timerNumber < 2)
                 clearInterval(refreshIntervalId);
-            printOutput(timerNumber.toString());
+            printOutput("<p class='red'>" + timerNumber.toString() + "<p/>");
             timerNumber--;
             // tslint:disable-next-line: align
         }, 700);
         setTimeout(function () {
-            let output = "Du befindest dich in der Bank und hast gerade den Schalter überfallen und dabei 20000 Euro erbeutet, flüchte so schnell wie möglich! <br/> [h] | Hilfe";
+            let output = "Du befindest dich in der Bank und hast gerade den Schalter überfallen und dabei 20000 Euro erbeutet, flüchte so schnell wie möglich! <br/> <b>[h]</b> | Hilfe";
             printOutput(output);
             // tslint:disable-next-line: align
         }, 2800);
@@ -644,7 +644,7 @@ var textAdventure;
     function createNewRoom(_nameOfNewRoom) {
         // Durchlaufen des jsonConfigData Files
         for (let obj in jsonConfigData) {
-            // Überprüfung, dass es ein Objekt der Obersten ebene ist
+            // Überprüfung, dass es ein Objekt der Obersten ebene isth
             if (jsonConfigData.hasOwnProperty(obj)) {
                 // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
                 if (obj === _nameOfNewRoom) {
@@ -653,7 +653,7 @@ var textAdventure;
                     currentRoom = theNewRoom;
                     jsonConfigData.User.currentRoom = currentRoom.name;
                     // let output: string = currentRoom.description + "<br/>" + outputItemsInRoom();
-                    printOutput(currentRoom.description + "<br/> [h] | Hilfe");
+                    printOutput("<b class='brown'>" + currentRoom.description + "</b><br/> <b>[h]</b> | Hilfe");
                 }
             }
         }
@@ -664,24 +664,24 @@ var textAdventure;
      * @return output: String
      */
     function outputCommands() {
-        let output = "[n] | Norden <br/> [s] | Süden <br/> [o] | Osten <br/> [w] | Westen <br/>[u] | umschauen <br> [l] | Gesundheitszustand anzeigen <br/> [i] | Inventar öffnen <br/> ";
+        let output = "<b>[n]</b> | Norden <br/> <b>[s]</b> | Süden <br/> <b>[o]</b> | Osten <br/> <b>[w]</b> | Westen <br/> <b>[u]</b> | umschauen <br> <b>[l]</b> | Gesundheitszustand anzeigen <br/> <b>[i]</b> | Inventar öffnen <br/> ";
         if (getAllPersons().length != 0) {
-            output = output + " [r] | reden <br/>";
+            output = output + " <b>[r]</b> | reden <br/>";
         }
         if (currentRoom.item.length != 0) {
-            output = output + "[t] | Item nehmen <br/>";
+            output = output + "<b>[t]</b> | Item nehmen <br/>";
         }
         if (inventory.length > 0) {
-            output = output + "[a] | Item ablegen <br/>";
+            output = output + "<b>[a]</b> | Item ablegen <br/>";
         }
         let firstTime = true;
         for (let i = 0; i < getAllPersons().length; i++) {
             if (getAllPersons()[i] instanceof textAdventure.Police && firstTime) {
-                output = output + "[k] | Polizei angreifen <br/>";
+                output = output + "<b>[k]</b> | Polizei angreifen <br/>";
                 firstTime = false;
             }
         }
-        output = output + "-------------------------- <br/>[q] | Spiel verlassen";
+        output = output + "-------------------------- <br/><b>[q]</b> | Spiel verlassen";
         return output;
     }
     /**

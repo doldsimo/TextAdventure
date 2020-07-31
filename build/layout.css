@@ -1,0 +1,42 @@
+body {
+	margin: 0;
+	font-family: 'Mulish';
+}
+.grid-container {
+	height: 100vh;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr;
+	grid-template-areas:
+		"console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area"
+		"console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area"
+		"console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area"
+		"userInput-Area userInput-Area  userInput-Area  cityPlan-Area   cityPlan-Area";
+}
+
+.console-Area {
+	grid-area: console-Area;
+	overflow: auto;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: #8d8d8d;
+	border-width: 2px;
+	padding: 5px;
+	margin: 10px;
+	
+}
+
+.cityPlan-Area {
+	grid-area: cityPlan-Area;
+}
+
+.userInput-Area {
+	grid-area: userInput-Area;
+}
+
+.input-field {
+	display: block;
+	margin: 0 auto;
+	width: 80%;
+	background-color: #dddddd;
+}

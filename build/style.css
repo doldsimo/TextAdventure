@@ -1,36 +1,20 @@
-body{
-    margin: 0;
+hr {
+	margin-bottom: 10px;
+	margin-top: 10px;
 }
-.grid-container {
-    height: 100vh;
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr 1fr 1fr;
-    grid-template-areas: 
-    "console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area" 
-    "console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area" 
-    "console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area" 
-    "userInput-Area userInput-Area  userInput-Area  cityPlan-Area   cityPlan-Area";
+div {
+	line-height: 140%;
 }
-
-.console-Area {
-    grid-area: console-Area;
-    overflow: auto;
-    background-color: white;
-    margin: 8px 0 0 8px; /*top right bottom left*/ 
+p {
+	display: inline;
+	margin: 0;
 }
-
-.cityPlan-Area {
-    grid-area: cityPlan-Area;
-    background-color: antiquewhite;
+.green {
+	color: #0cb723;
 }
-
-.userInput-Area {
-    grid-area: userInput-Area;
-    background-color: #dddddd;
+.red {
+	color: #d41d1d;
 }
-
-.input-field{
-    margin: 2% 0 0 2%; /*top right bottom left*/ 
-    width: 80%;
+.brown {
+	color: #a38155;
 }
