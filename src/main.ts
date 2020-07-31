@@ -18,7 +18,6 @@ namespace textAdventure {
             let inputValue: string = inputField.value.toLowerCase();
             checkUsersChoice(inputValue);
             inputField.value = "";
-            // console.log(jsonConfigData);
         }
     });
 
@@ -27,7 +26,7 @@ namespace textAdventure {
      * 
      * @param _content: JSONObject | Enthält alle Daten des Spieles
      */
-    export function startProgram(_content: JSONObject): void {
+    export function startProgram(_content: JSONData): void {
         jsonConfigData = _content;
         // Fuege das anfang Item zum Inventar hinzu
         // inventory.push(new Item(jsonConfigData.User.item[0].name));
@@ -106,8 +105,6 @@ namespace textAdventure {
                     case "nehmen":
                     case "t":
                         takeItem();
-                        // console.log(jsonConfigData);
-                        // debugger;
                         break;
                     case "ablegen":
                     case "a":
@@ -125,6 +122,10 @@ namespace textAdventure {
                     case "k":
                         attackPolice();
                         break;
+                    case "speichern":
+                    case "f":
+                        saveGame();
+                        break;
                     case "verlassen":
                     case "q":
                         printOutput(quitGame());
@@ -135,9 +136,6 @@ namespace textAdventure {
                 break;
             // Item Aufnehmen
             case 3:
-                // console.log(currentRoom);
-                // console.log(jsonConfigData);
-                // console.log(inventory);
                 let userInputAsNumber: number = +_userInput;
                 if (Number.isInteger(userInputAsNumber) && _userInput != "") {
                     pullItemFromRoomAndPushToInventory(userInputAsNumber);
@@ -177,6 +175,15 @@ namespace textAdventure {
         }
     }
 
+
+    function saveGame(): void {
+        //Aktuelles Inventar wird in die JSON-Datei geschrieben
+        jsonConfigData.User.item = inventory;
+        //Aktueller Lebensstand wird in die JSON-Datei geschrieben
+        jsonConfigData.User.health = health;
+        printOutput("Das Spiel wird gespeichert. Schaue in deinen Downloads Ordner.");
+        save(jsonConfigData, "gameData");
+    }
     function attackThePickedPolice(_inNumber: number): void {
         let output: string = "";
         // Leben abziehen
@@ -185,7 +192,7 @@ namespace textAdventure {
         jsonConfigData.User.health = health;
         // Überprüfen, des aktuellen Lebens (Wenn unter 0, ist das Spiel verloren)
         if (0 >= health) {
-            printOutput("Die Polizei hat im Kampf gegen dich gewonnen. Du hattest zu wenig Leben.<br/>" + gameOver());
+            printOutput(gameOver("Die Polizei hat im Kampf gegen dich gewonnen. Du hattest zu wenig Leben.<br/>Das Spiel ist vorbei"));
         } else {
             // Durläuft alle Personen im Aktuellen Raum
             for (let i: number = 0; i < getAllPersons().length; i++) {
@@ -447,7 +454,7 @@ namespace textAdventure {
                 jsonConfigData = JSON.parse(fr.result.toString());
                 // Deaktiviert den Button
                 loadFileButton.setAttribute("disabled", "");
-                printOutput("Wilkommen zurück " + jsonConfigData.User.name);
+                printOutput("Wilkommen zurück " + (jsonConfigData.User.name).toUpperCase());
                 gameSequenz++;
                 startProgram(JSON.parse(fr.result.toString()));
             };
@@ -528,10 +535,12 @@ namespace textAdventure {
      */
     function walkToWast(): void {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
-        if (currentRoom.neighbour[2] != null) {
+        if (currentRoom.neighbour[2] != null && currentRoom.neighbour[2] != "Polizeiwache") {
             printOutput("Du läufst nach Westen");
             let roomInWest: string = currentRoom.neighbour[2];
             createNewRoom(roomInWest);
+        } else if (currentRoom.neighbour[2] === "Polizeiwache") {
+            printOutput(gameOver("Du wurdest in der Polizeiwache identifiziert und Festgenommen.<br/> Das Spiel ist vorbei."));
         } else {
             printOutput("Nach Westen befindet sich kein Weg.");
         }
@@ -542,10 +551,12 @@ namespace textAdventure {
      */
     function walkToSouth(): void {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
-        if (currentRoom.neighbour[1] != null && currentRoom.neighbour[1] != "Baustelle") {
+        if (currentRoom.neighbour[1] != null && currentRoom.neighbour[1] != "Baustelle" && currentRoom.neighbour[1] != "Bank") {
             printOutput("Du läufst nach Süden");
             let roomInSouth: string = currentRoom.neighbour[1];
             createNewRoom(roomInSouth);
+        } else if (currentRoom.neighbour[1] === "Bank") {
+            printOutput(gameOver("Du bist zurück zum Tatort zurück gelaufen und wurdest von der Polizei geschnappt. <br/> Das Spiel ist vorbei."));
         } else if (currentRoom.neighbour[1] === "Baustelle") {
             printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
         }
@@ -600,7 +611,7 @@ namespace textAdventure {
                 if (obj === _nameOfNewRoom) {
                     let theNewRoom: Room = new Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person.polizei, jsonConfigData[obj].person.passant, jsonConfigData[obj].person.verkaeufer, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
                     currentRoom = theNewRoom;
-                    jsonConfigData.User.currentRoom = currentRoom;
+                    jsonConfigData.User.currentRoom = currentRoom.name;
                     // let output: string = currentRoom.description + "<br/>" + outputItemsInRoom();
                     printOutput(currentRoom.description + "<br/> [h] | Hilfe");
                 }
@@ -658,9 +669,9 @@ namespace textAdventure {
         return allPersons;
     }
 
-    function gameOver(): string {
+    function gameOver(_gameOverText: string): string {
         gameSequenz = null;
-        return "Das Spiel ist vorbei";
+        return _gameOverText;
     }
     function gameWin(): string {
         gameSequenz = null;
