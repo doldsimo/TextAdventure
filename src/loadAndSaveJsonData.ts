@@ -18,6 +18,35 @@ namespace textAdventure {
         let json: JSONData = JSON.parse(text);
         return (json);
     }
+    export function loadUsersJSONData(): void {
+        printOutput("<input id='loadFileButton' accept='.json' type='file'>");
+        let loadFileButton: HTMLInputElement = document.getElementById("loadFileButton") as HTMLInputElement;
+        loadFileButton.addEventListener("change", function (): void {
+            let fr: FileReader = new FileReader();
+            fr.onload = function (): void {
+                // Überschreibt die jsonConfigData variable mit dem hochgeladenen Json-File
+                jsonConfigData = JSON.parse(fr.result.toString());
+                // Deaktiviert den Button
+                loadFileButton.setAttribute("disabled", "");
+                printOutput("Wilkommen zurück " + (jsonConfigData.User.name).toUpperCase());
+                gameSequenz++;
+                console.log(jsonConfigData);
+                startProgram(jsonConfigData);
+            };
+            fr.readAsText(this.files[0]);
+        });
+    }
+
+    export function saveGame(): void {
+        //Aktuelles Inventar wird in die JSON-Datei geschrieben
+        jsonConfigData.User.item = inventory;
+        //Current Room wird festgelegt
+        jsonConfigData.User.currentRoom = currentRoom.name;
+        //Aktueller Lebensstand wird in die JSON-Datei geschrieben
+        jsonConfigData.User.health = health;
+        printOutput("Das Spiel wird gespeichert. Schaue in deinen Downloads Ordner.");
+        save(jsonConfigData, "gameData");
+    }
 
     export function save(_content: JSONData, _filename: string): void {
         //JSON-Objekt in Text umwandeln
