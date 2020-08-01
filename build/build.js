@@ -81,7 +81,6 @@ var textAdventure;
             health = jsonConfigData.User.health;
             gameSequenz = 2;
         }
-        getUserInput();
     }
     textAdventure.startProgram = startProgram;
     /**
@@ -249,19 +248,16 @@ var textAdventure;
                 }
             }
             // Hinzufügen der Items des Polizist zum currentRoom
-            // @ts-ignore: Unreachable code error
-            let attackedPoliceItemsArray = jsonConfigData[currentRoom.name].person.polizei[_inNumber - 1].item;
+            let attackedPoliceItemsArray = jsonConfigData.Rooms[getIndexOfCurrentRoom(currentRoom)].person.polizei[_inNumber - 1].item;
             for (let i = 0; i < attackedPoliceItemsArray.length; i++) {
                 let theItem = new textAdventure.Item(attackedPoliceItemsArray[i].name);
                 // Item zum Aktuellen Raum hinzufügen
                 currentRoom.item.push(theItem);
                 // Item in der JSON-Datei hinzufügen
-                // @ts-ignore: Unreachable code error
-                jsonConfigData[currentRoom.name].item.push(theItem);
+                jsonConfigData.Rooms[getIndexOfCurrentRoom(currentRoom)].item.push(theItem);
             }
             // Entfernt den Polizisten aus der JSON-Datei
-            // @ts-ignore: Unreachable code error
-            jsonConfigData[currentRoom.name].person.polizei.splice(_inNumber - 1, _inNumber);
+            jsonConfigData.Rooms[getIndexOfCurrentRoom(currentRoom)].person.polizei.splice(_inNumber - 1, _inNumber);
             // Entfernt des Polizisten aus dem aktuellen Raum
             currentRoom.police.splice(_inNumber - 1, _inNumber);
             printOutput(output);
@@ -289,17 +285,24 @@ var textAdventure;
     function talkWithTheRightPerson(_inputNumber) {
         for (let i = 0; i < getAllPersons().length; i++) {
             if (i === _inputNumber - 1) {
-                if (getAllPersons()[i] instanceof textAdventure.Salesman || getAllPersons()[i] instanceof textAdventure.Passanger) {
+                if (getAllPersons()[i] instanceof textAdventure.Police) {
+                    printOutput(getAllPoliceman()[i].name + ": " + "<i>" + getAllPoliceman()[i].text + "</i>");
+                }
+                if (getAllPersons()[i] instanceof textAdventure.Passanger) {
                     if ((Math.floor(Math.random() * Math.floor(2))) === 1) {
-                        printOutput(getAllPersons()[i].name + ": " + "<i>" + getAllPersons()[i].text + "</i>");
+                        printOutput(getAllPassanger()[i - getAllPoliceman().length].name + ": " + "<i>" + getAllPassanger()[i - getAllPoliceman().length].text + "</i>");
                     }
                     else {
-                        // @ts-ignore: Unreachable code error
-                        printOutput(getAllPersons()[i].name + ": " + "<i>" + getAllPersons()[i].text2 + "</i>");
+                        printOutput(getAllPassanger()[i - getAllPoliceman().length].name + ": " + "<i>" + getAllPassanger()[i - getAllPoliceman().length].text2 + "</i>");
                     }
                 }
-                else {
-                    printOutput(getAllPersons()[i].name + ": " + "<i>" + getAllPersons()[i].text + "</i>");
+                if (getAllPersons()[i] instanceof textAdventure.Salesman) {
+                    if ((Math.floor(Math.random() * Math.floor(2))) === 1) {
+                        printOutput(getAllSalesman()[i - (getAllPoliceman().length + getAllPassanger().length)].name + ": " + "<i>" + getAllSalesman()[i - (getAllPoliceman().length + getAllPassanger().length)].text + "</i>");
+                    }
+                    else {
+                        printOutput(getAllSalesman()[i - (getAllPoliceman().length + getAllPassanger().length)].name + ": " + "<i>" + getAllSalesman()[i - (getAllPoliceman().length + getAllPassanger().length)].text2 + "</i>");
+                    }
                 }
             }
         }
@@ -339,8 +342,7 @@ var textAdventure;
                 let item = inventory.splice(_inputAsNumber - 1, 1)[0];
                 jsonConfigData.User.item.splice(_inputAsNumber - 1, 1);
                 // Fügt das Item im akutellen Raum in die JSON-Datei ein
-                // @ts-ignore: Unreachable code error
-                jsonConfigData[currentRoom.name].item.push(item);
+                jsonConfigData.Rooms[getIndexOfCurrentRoom(currentRoom)].item.push(item);
                 currentRoom.item.push(item);
                 printOutput("<p class='red'>&nbsp;- " + item.name + " abgelegt <p/>");
             }
@@ -363,21 +365,28 @@ var textAdventure;
         }
         printOutput(output);
     }
+    function getIndexOfCurrentRoom(_currentRom) {
+        let index;
+        for (let i = 0; i < jsonConfigData.Rooms.length; i++) {
+            if (_currentRom.name === jsonConfigData.Rooms[i].name) {
+                index = i;
+            }
+        }
+        return index;
+    }
     function pullItemFromRoomAndPushToInventory(_userInputAsNumber) {
         for (let i = 0; i < currentRoom.item.length; i++) {
             if (i === _userInputAsNumber - 1) {
                 // Nimmt das Item aus dem currentRoom heraus und speichert es in der Variable item
                 let item = currentRoom.item.splice(_userInputAsNumber - 1, 1)[0];
                 // Löscht des Item aus der JSON-Datei
-                // @ts-ignore: Unreachable code error
-                jsonConfigData[currentRoom.name].item.splice(_userInputAsNumber - 1, 1);
+                jsonConfigData.Rooms[getIndexOfCurrentRoom(currentRoom)].item.splice(_userInputAsNumber - 1, 1);
                 let output = "";
                 //Überprüft, ob das Item Geld ist, wenn ja wird es zusammenaddiert
                 if ((new RegExp(" Euro")).test(item.name) || (new RegExp(" EURO")).test(item.name)) {
                     // Durchläuft das Akutelle Inventar
                     let oldInventoryLength = inventory.length;
                     let oldInventory = inventory;
-                    // debugger;
                     for (let i = 0; i < oldInventoryLength; i++) {
                         // Wenn sich  Geld im Inventar befindet 
                         if ((new RegExp(" Euro")).test(oldInventory[i].name)) {
@@ -480,7 +489,7 @@ var textAdventure;
             // tslint:disable-next-line: align
         }, 2800);
         // Setzt den Anfangsraum fest
-        let bank = new textAdventure.Room(jsonConfigData.Bank.name, jsonConfigData.Bank.description, jsonConfigData.Bank.person.polizei, jsonConfigData.Bank.person.passant, jsonConfigData.Bank.person.verkaeufer, jsonConfigData.Bank.item, jsonConfigData.Bank.neighbour);
+        let bank = new textAdventure.Room(jsonConfigData.Rooms[0].name, jsonConfigData.Rooms[0].description, jsonConfigData.Rooms[0].person.polizei, jsonConfigData.Rooms[0].person.passant, jsonConfigData.Rooms[0].person.verkaeufer, jsonConfigData.Rooms[0].item, jsonConfigData.Rooms[0].neighbour);
         currentRoom = bank;
         // Setzt das Anfangsleben fest
         health = jsonConfigData.User.health;
@@ -642,19 +651,12 @@ var textAdventure;
      * @param _nameOfNewRoom: String | Name des Raumes in welchen man navigieren möchte
      */
     function createNewRoom(_nameOfNewRoom) {
-        // Durchlaufen des jsonConfigData Files
-        for (let obj in jsonConfigData) {
-            // Überprüfung, dass es ein Objekt der Obersten ebene isth
-            if (jsonConfigData.hasOwnProperty(obj)) {
-                // Ist der Objektname der gleiche, wie im currentRoom angegeben wird dieses erstellt und als currentRoom gesetzt
-                if (obj === _nameOfNewRoom) {
-                    // @ts-ignore: Unreachable code error
-                    let theNewRoom = new textAdventure.Room(jsonConfigData[obj].name, jsonConfigData[obj].description, jsonConfigData[obj].person.polizei, jsonConfigData[obj].person.passant, jsonConfigData[obj].person.verkaeufer, jsonConfigData[obj].item, jsonConfigData[obj].neighbour);
-                    currentRoom = theNewRoom;
-                    jsonConfigData.User.currentRoom = currentRoom.name;
-                    // let output: string = currentRoom.description + "<br/>" + outputItemsInRoom();
-                    printOutput("<b class='brown'>" + currentRoom.description + "</b><br/> <b>[h]</b> | Hilfe");
-                }
+        for (let i = 0; i < jsonConfigData.Rooms.length; i++) {
+            if (_nameOfNewRoom === jsonConfigData.Rooms[i].name) {
+                let theNewRoom = new textAdventure.Room(jsonConfigData.Rooms[i].name, jsonConfigData.Rooms[i].description, jsonConfigData.Rooms[i].person.polizei, jsonConfigData.Rooms[i].person.passant, jsonConfigData.Rooms[i].person.verkaeufer, jsonConfigData.Rooms[i].item, jsonConfigData.Rooms[i].neighbour);
+                currentRoom = theNewRoom;
+                jsonConfigData.User.currentRoom = currentRoom.name;
+                printOutput("<b class='brown'>" + currentRoom.description + "</b><br/> <b>[h]</b> | Hilfe");
             }
         }
     }
@@ -703,6 +705,27 @@ var textAdventure;
         }
         return allPersons;
     }
+    function getAllPoliceman() {
+        let allPoliceman = [];
+        for (let i = 0; i < currentRoom.police.length; i++) {
+            allPoliceman.push(currentRoom.police[i]);
+        }
+        return allPoliceman;
+    }
+    function getAllPassanger() {
+        let allPassanger = [];
+        for (let i = 0; i < currentRoom.passanger.length; i++) {
+            allPassanger.push(currentRoom.passanger[i]);
+        }
+        return allPassanger;
+    }
+    function getAllSalesman() {
+        let allSalesman = [];
+        for (let i = 0; i < currentRoom.salesman.length; i++) {
+            allSalesman.push(currentRoom.salesman[i]);
+        }
+        return allSalesman;
+    }
     function gameOver(_gameOverText) {
         gameSequenz = null;
         return _gameOverText;
@@ -728,11 +751,6 @@ var textAdventure;
                 gameWinText = gameWinText + "Mit deinem Geld lebst du normal weiter, da es nicht für größere Ausgaben reicht.";
         }
         return gameWinText;
-    }
-    /**
-     * Funktion löst Event aus, sobald der User etwas ins Input Feld eingegeben hat und mit Enter bestätigt hat
-     */
-    function getUserInput() {
     }
     /**
      * Funktion fuegt den übergebenen String dem HTML-Dokument hinzu

@@ -9,20 +9,7 @@ namespace textAdventure {
 
     export interface JSONData {
         User: UserInformation;
-        Bahnhofsplatz: DataRoom;
-        Ludwigsplatz: DataRoom;
-        Europaplatz: DataRoom;
-        Wachplatz: DataRoom;
-        Marktplatz: DataRoom;
-        Apothekenplatz: DataRoom;
-        Friedrichsplatz: DataRoom;
-        Kronenplatz: DataRoom;
-        Kolpingplatz: DataRoom;
-        Bank: DataRoom;
-        Polizeiwache: DataRoom;
-        Apotheke: DataRoom;
-        Garage: DataRoom;
-        obj: DataRoom;
+        Rooms: DataRoom[];
     }
 
     export interface UserInformation {
