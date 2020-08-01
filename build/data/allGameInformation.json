@@ -14,13 +14,13 @@
 			"name": "Bank",
 			"description": "Das ist die Bank",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 	
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -29,7 +29,7 @@
 					"name": "22 Euro"
 				},
 				{
-					"name": "7522 Euro"
+					"name": "10522 Euro"
 				},
 				{
 					"name": "3044 Euro"
@@ -41,13 +41,13 @@
 			"name": "Bahnhofsplatz",
 			"description": "Du befindest dich am Bahnhofsplatz, schaue dich doch mal ein wenig um.",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 					{ "name": "Jeremy", "text": "Hey, du siehst so fertig aus. Brauchst du etwas Stoff um wieder auf die Beine zu kommen?", "text2": "Hey psst aufgepasst: die Spritze aus der Apotheke kommt fast an meinen Stoff ran."}
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -63,21 +63,21 @@
 		},
 		{
 			"name": "Ludwigsplatz",
-			"description": "Du befindest dich auf dem Ludwigsplatz, vielleicht findest du hier ja etwas interessantes.",
+			"description": "Du befindest dich auf dem Ludwigsplatz, vielleicht findest du hier ja etwas Interessantes.",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 	
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
 			"item": [
 				{
-					"name": "5 Euro"
+					"name": "25 Euro"
 				}
 			],
 			"neighbour": ["Garage", "Marktplatz", "Bahnhofsplatz", "Europaplatz"]
@@ -86,13 +86,13 @@
 			"name": "Europaplatz",
 			"description": "Das ist der Europaplatz, schaue dich doch mal ein wenig um.",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 					{ "name": "Manitu", "text": "Die Polizei fragt immer, ob ich etwas getrunken habe. Ob ich auch ausreichend esse, interessiert die wohl gar nicht.", "text2": "Ich habe gehört die Bank wurde ausgeraubt"}
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -107,16 +107,16 @@
 			"name": "Wachplatz",
 			"description": "Das ist der Wachplatz, hier sind sehr viele Polizisten unterwegs.",
 			"person": {
-				"polizei": [
+				"police": [
 					{ "name": "Ole", "text": "Ich habe keine Zeit zu reden. Sehen Sie nicht, dass ich in einem wichtigen Einatz bin?", "life": 100, "item": [{ "name": "Pistole" },{ "name": "100 Euro" }] },
 					{ "name": "Jule", "text": "Halt Stop! Sie sehen genau so aus, wie der Mann, der die Bank überfallen hat!", "life": 100, "item": [{ "name": "Autoschlüssel" },{ "name": "500 Euro" }] },
 					{ "name": "Kalle", "text": "Gehen Sie bitte weiter, wir sind hier mit einem wichtigen Fall beschäftigt.", "life": 100, "item": [{ "name": "Zigaretten" },{ "name": "250 Euro" }] },
-					{ "name": "Oliver", "text": "Bleiben Sie kurz stehen, Sie kommen mir sehr bekannt vor. Kann ich bitte Ihren Ausweis sehen?", "life": 100, "item": [{ "name": "Handschellen" }] }	
+					{ "name": "Oliver", "text": "Bleiben Sie kurz stehen; Sie kommen mir sehr bekannt vor. Kann ich bitte Ihren Ausweis sehen?", "life": 100, "item": [{ "name": "Handschellen" }] }	
 				],
-				"passant": [
+				"passanger": [
 	
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -134,13 +134,13 @@
 			"name": "Marktplatz",
 			"description": "Das ist der Marktplatz, schaue dich doch mal um, vielleicht findest du etwas.",
 			"person": {
-				"polizei": [
+				"police": [
 					{ "name": "Fritz", "text": "Allgemeine Personenkontrolle. Keiner rührt sich vom Fleck.", "life": 100, "item": [{ "name": "525 Euro" }, {"name": "Pistole"}] }
 				],
-				"passant": [
+				"passanger": [
 					{ "name": "Renate", "text": "Keine Zeit zum plaudern. Bringen Sie sich lieber in Sicherheit, so lange es noch möglich ist. Räuber auf der Flucht!", "text2": "Aus dem Weg! Ich muss sofort hier weg!"}
 				],
-				"verkaeufer": [
+				"salesman": [
 					{ "name": "Manuel", "text": "Frisches Gemüse, zu unschlagbarem Preis! Bessere Qualität bekommen Sie nirgends.", "text2": "He, sind Sie verletzt? Besorgen Sie sich lieber schnell einen Verband in der Apotheke!" },
 					{ "name": "Julian", "text": "Leckere Gewürze, schlagen Sie zu. Alles ist frisch, das können Sie mir glauben.", "text2": "Bei Polizeiwache ist ganz schön Betrieb. Freiwillig würde ich da nicht vorbei gehen." }
 				]
@@ -159,14 +159,14 @@
 			"name": "Apothekenplatz",
 			"description": "Das ist der Apothekenplatz, schaue doch mal in der Apotheke vorbei.",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 					{ "name": "Patricia", "text": "Gehts dir nicht gut? Du siehst so blass aus.", "text2": "Hilfe! Die Polizei sagte vorhin, dass ein Räuber auf der Flucht sei."}
 	
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -179,15 +179,15 @@
 		},
 		{
 			"name": "Friedrichsplatz",
-			"description": "Du befindest dich auf dem Friedrichsplatz, vielleicht findest du hier etwas interessantes",
+			"description": "Du befindest dich auf dem Friedrichsplatz, vielleicht findest du hier etwas Interessantes.",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 	
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -205,13 +205,13 @@
 			"name": "Kronenplatz",
 			"description": "Das ist der Kronenplatz, schaue dich doch mal ein bisschen um.",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
-					{ "name": "Mia", "text": "Ist hier etwas passiert? Ich höre aufeinmal so viele Polizeiautos.", "text2": "Da bekommt man ja glatt Angst, bei so viel Polizei, die auf einmal durch die Stadt läuft."}
+				"passanger": [
+					{ "name": "Mia", "text": "Ist hier etwas passiert? Ich höre auf einmal so viele Polizeiautos.", "text2": "Da bekommt man ja glatt Angst, bei so viel Polizei, die auf einmal durch die Stadt läuft."}
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -227,16 +227,16 @@
 		},
 		{
 			"name": "Kolpingplatz",
-			"description": "Du befindest dich auf dem Kolpingplatz, vielleicht findest du hier etwas interessantes.",
+			"description": "Du befindest dich auf dem Kolpingplatz, vielleicht findest du hier etwas Interessantes.",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 					{ "name": "Walter", "text": "Psst, ich habe den Schlüssel für die Garage auf dem Friedrichsplatz unter der Laterne versteckt.", "text2": "Hey du! Auf dem Friedrichsplatz findest du das, was du suchst."}
 	
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -251,13 +251,13 @@
 			"name": "Polizeiwache",
 			"description": "Das ist die Polizeiwache",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 	
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},
@@ -268,14 +268,14 @@
 			"name": "Apotheke",
 			"description": "Das ist die Apotheke",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 	
 				],
-				"verkaeufer": [
-					{ "name": "Claudia", "text": "Hallo, sehen sie sich gerne ein bisschen um, Sie finden hier alles, was eine Apotheke bracht.", "text2": "Haben Sie schon das neuste mitbekommen? Die Bank wurde überfallen. Hoffentlich kommt keiner auf die Idee die Apotheke zu überfallen." }
+				"salesman": [
+					{ "name": "Claudia", "text": "Hallo, sehen sie sich gerne ein bisschen um, Sie finden hier alles, was eine Apotheke bracht.", "text2": "Haben Sie schon das Neuste mitbekommen? Die Bank wurde überfallen. Hoffentlich kommt keiner auf die Idee die Apotheke zu überfallen." }
 					
 				
 				]
@@ -297,13 +297,13 @@
 			"name": "Garage",
 			"description": "Das ist die Garage",
 			"person": {
-				"polizei": [
+				"police": [
 					
 				],
-				"passant": [
+				"passanger": [
 	
 				],
-				"verkaeufer": [
+				"salesman": [
 				
 				]
 			},

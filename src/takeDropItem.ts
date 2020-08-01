@@ -74,26 +74,26 @@ namespace textAdventure {
                     } else {
                         health = 100;
                     }
-                    output = output + "<br/>Leben um 50% geheilt.";
+                    output = output + "<br/>Leben um 50% geheilt. Dein Gesundheitszustand beträgt nun " + health + "%.";
                 } else if (item.name === "Verband") {
                     if (health + 25 < 100) {
                         health = health + 25;
                     } else {
                         health = 100;
                     }
-                    output = output + "<br/>Leben um 25% geheilt.";
+                    output = output + "<br/>Leben um 25% geheilt. Dein Gesundheitszustand beträgt nun " + health + "%.";
                 } else if (item.name === "Hustensaft") {
                     if (health + 5 < 100) {
                         health = health + 5;
                     } else {
                         health = 100;
                     }
-                    output = output + "<br/>Leben um 5% geheilt.";
+                    output = output + "<br/>Leben um 5% geheilt. Dein Gesundheitszustand beträgt nun " + health + "%.";
                 } else {
                     // Pusth das erstellte Item ins Inventar (wennes keine Spritze, Verband oder Hustensaft ist)
                     inventory.push(item);
                 }
-                printOutput("<p class='green'>&nbsp;+ " + item.name + " aufgenommen<p/>");
+                printOutput("<p class='green'>&nbsp;+ " + item.name + " aufgenommen<p/>" + output);
             }
         }
         gameSequenz = 2;
@@ -116,9 +116,14 @@ namespace textAdventure {
     }
 
     export function outputInventory(): string {
-        let output: string = "In deinem Inventar befinden sich:";
-        for (let i: number = 0; i < inventory.length; i++) {
-            output = output + "<br/> - " + inventory[i].name;
+        let output: string = "";
+        if (inventory.length === 0) {
+            output = output + "In deinem Inventar befinden sich keine Gegenstände.";
+        } else {
+            output = output + "In deinem Inventar befinden sich:";
+            for (let i: number = 0; i < inventory.length; i++) {
+                output = output + "<br/> - " + inventory[i].name;
+            }
         }
         return output;
     }

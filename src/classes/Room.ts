@@ -6,10 +6,8 @@ namespace textAdventure {
         police: Police[];
         passanger: Passanger[];
         salesman: Salesman[];
-        // person: Person[];
         item: Item[];
         neighbour: string[];
-
 
         constructor(_name: string, _description: string, _police: Police[], _passanger: Passanger[], _salesman: Salesman[], _item: Item[], _neigbour: string[]) {
             this.name = _name;
@@ -19,7 +17,6 @@ namespace textAdventure {
             this.salesman = this.createSalesman(_salesman);
             this.item = this.buildingItems(_item);
             this.neighbour = _neigbour;
-            // this.person = this.addAllPersons();
         }
 
         private createPolice(_police: Police[]): Police[] {

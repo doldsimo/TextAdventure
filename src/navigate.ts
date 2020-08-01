@@ -5,7 +5,7 @@ namespace textAdventure {
     export function walkToEast(): void {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (currentRoom.neighbour[3] != null) {
-            printOutput("Du läufst nach Osten");
+            printOutput("Du läufst nach Osten.");
             let roomInEast: string = currentRoom.neighbour[3];
             createNewRoom(roomInEast);
         } else {
@@ -19,11 +19,11 @@ namespace textAdventure {
     export function walkToWast(): void {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (currentRoom.neighbour[2] != null && currentRoom.neighbour[2] != "Polizeiwache") {
-            printOutput("Du läufst nach Westen");
+            printOutput("Du läufst nach Westen.");
             let roomInWest: string = currentRoom.neighbour[2];
             createNewRoom(roomInWest);
         } else if (currentRoom.neighbour[2] === "Polizeiwache") {
-            printOutput(gameOver("Du wurdest in der Polizeiwache identifiziert und Festgenommen.<br/> Das Spiel ist vorbei."));
+            printOutput(gameOver("<div class='game-Over'><b>Du wurdest in der Polizeiwache identifiziert und festgenommen.<br/> Das Spiel ist vorbei.</b></div>"));
         } else {
             printOutput("Nach Westen befindet sich kein Weg.");
         }
@@ -35,11 +35,11 @@ namespace textAdventure {
     export function walkToSouth(): void {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (currentRoom.neighbour[1] != null && currentRoom.neighbour[1] != "Baustelle" && currentRoom.neighbour[1] != "Bank") {
-            printOutput("Du läufst nach Süden");
+            printOutput("Du läufst nach Süden.");
             let roomInSouth: string = currentRoom.neighbour[1];
             createNewRoom(roomInSouth);
         } else if (currentRoom.neighbour[1] === "Bank") {
-            printOutput(gameOver("Du bist zurück zum Tatort zurück gelaufen und wurdest von der Polizei geschnappt. <br/> Das Spiel ist vorbei."));
+            printOutput(gameOver("<div class='game-Over'> <b>Du bist zurück zum Tatort gelaufen und wurdest von der Polizei geschnappt. <br/> Das Spiel ist vorbei.</b><div/>"));
         } else if (currentRoom.neighbour[1] === "Baustelle") {
             printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
         }
@@ -54,7 +54,7 @@ namespace textAdventure {
     export function walkToNorth(): void {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (currentRoom.neighbour[0] != null && currentRoom.neighbour[0] != "Baustelle" && currentRoom.neighbour[0] != "Garage") {
-            printOutput("Du läufst nach Norden");
+            printOutput("Du läufst nach Norden.");
             let roomInNorth: string = currentRoom.neighbour[0];
             createNewRoom(roomInNorth);
         } else if (currentRoom.neighbour[0] === "Baustelle") {

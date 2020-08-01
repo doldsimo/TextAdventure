@@ -28,7 +28,7 @@ namespace textAdventure {
                 jsonConfigData = JSON.parse(fr.result.toString());
                 // Deaktiviert den Button
                 loadFileButton.setAttribute("disabled", "");
-                printOutput("Wilkommen zurück " + (jsonConfigData.User.name).toUpperCase());
+                printOutput("Wilkommen zurück " + (jsonConfigData.User.name).toUpperCase() + ".");
                 gameSequenz++;
                 console.log(jsonConfigData);
                 startProgram(jsonConfigData);
@@ -44,7 +44,7 @@ namespace textAdventure {
         jsonConfigData.User.currentRoom = currentRoom.name;
         //Aktueller Lebensstand wird in die JSON-Datei geschrieben
         jsonConfigData.User.health = health;
-        printOutput("Das Spiel wird gespeichert. Schaue in deinen Downloads Ordner.");
+        printOutput("<div class='game-Over'><b>Das Spiel wurde gespeichert. Schaue in deinen Downloads.<br/>Zum Weiterspielen starte das Spiel und lade die Datei.</b></div>");
         save(jsonConfigData, "gameData");
     }
 

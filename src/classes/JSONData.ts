@@ -20,28 +20,8 @@ namespace textAdventure {
     }
 
     export interface Personen {
-        polizei: Polizei[];
-        passant: Passant[];
-        verkaeufer: Verkaeufer[];
+        police: Police[];
+        passanger: Passanger[];
+        salesman: Salesman[];
     }
-
-    export interface Polizei {
-        name: string;
-        text: string;
-        life: number;
-        item: Item[];
-    }
-
-    export interface Passant {
-        name: string;
-        text: string;
-        text2: string;
-    }
-
-    export interface Verkaeufer {
-        name: string;
-        text: string;
-        text2: string;
-    }
-
 }

@@ -31,6 +31,12 @@ p {
 .red {
 	color: #d41d1d;
 }
-.brown {
-	color: #a38155;
+.blue {
+	color: #073479;
+}
+.game-Over {
+	background-color: #ec9898;
+}
+.game-Win {
+	background-color: #92e69d;
 }

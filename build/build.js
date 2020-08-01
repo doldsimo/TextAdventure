@@ -8,16 +8,17 @@ var textAdventure;
             output = output + "Welchen Polizisten möchtest du angreifen?";
             for (let i = 0; i < textAdventure.getAllPersonsFromCurrentRoom().length; i++) {
                 if (textAdventure.getAllPersonsFromCurrentRoom()[i] instanceof textAdventure.Police) {
-                    output = output + "<br/>" + "[" + [i + 1] + "]" + " Polizei | " + textAdventure.getAllPersonsFromCurrentRoom()[i].name;
+                    output = output + "<br/>" + "<b>[" + [i + 1] + "]</b>" + " Polizei | " + textAdventure.getAllPersonsFromCurrentRoom()[i].name;
                 }
             }
-            output = output + "<br/>Gebe die Nummer ein";
+            textAdventure.gameSequenz = 6;
+            output = output + "<br/>Gebe die Nummer ein.";
         }
         else {
             output = output + "Hier befindet sich kein Polizist.";
+            textAdventure.gameSequenz = 2;
         }
         textAdventure.printOutput(output);
-        textAdventure.gameSequenz = 6;
     }
     textAdventure.attackPolice = attackPolice;
     function attackThePickedPolice(_inNumber) {
@@ -28,7 +29,7 @@ var textAdventure;
         textAdventure.jsonConfigData.User.health = textAdventure.health;
         // Überprüfen, des aktuellen Lebens (Wenn unter 0, ist das Spiel verloren)
         if (0 >= textAdventure.health) {
-            textAdventure.printOutput(textAdventure.gameOver("Die Polizei hat im Kampf gegen dich gewonnen. Du hattest zu wenig Leben.<br/>Das Spiel ist vorbei"));
+            textAdventure.printOutput(textAdventure.gameOver("<div class='game-Over'><b>Die Polizei hat im Kampf gegen dich gewonnen. Du hattest zu wenig Leben.<br/>Das Spiel ist vorbei.</b></div>"));
         }
         else {
             // Durläuft alle Personen im Aktuellen Raum
@@ -37,12 +38,12 @@ var textAdventure;
                 if (textAdventure.getAllPersonsFromCurrentRoom()[i] instanceof textAdventure.Police) {
                     // Pickt sich den Polizist, welcher sich hinter der eingegebenen Nummer verbirgt
                     if (i === _inNumber - 1) {
-                        output = output + "Du hast den Polizist " + textAdventure.getAllPersonsFromCurrentRoom()[i].name + " angegriffen.<br/> Dieser ist nun bewusstlos und hat seine Gegenstände verloren.<br/>Du hast 40% Leben Verloren";
+                        output = output + "Du hast den Polizist " + textAdventure.getAllPersonsFromCurrentRoom()[i].name + " angegriffen.<br/> Dieser ist nun bewusstlos und hat seine Gegenstände verloren.<br/>Du hast 40% Leben verloren. Dein Gesundheitszustand beträgt nun " + textAdventure.health + "%.";
                     }
                 }
             }
             // Hinzufügen der Items des Polizist zum currentRoom
-            let attackedPoliceItemsArray = textAdventure.jsonConfigData.Rooms[textAdventure.getIndexOfCurrentRoom(textAdventure.currentRoom)].person.polizei[_inNumber - 1].item;
+            let attackedPoliceItemsArray = textAdventure.jsonConfigData.Rooms[textAdventure.getIndexOfCurrentRoom(textAdventure.currentRoom)].person.police[_inNumber - 1].item;
             for (let i = 0; i < attackedPoliceItemsArray.length; i++) {
                 let theItem = new textAdventure.Item(attackedPoliceItemsArray[i].name);
                 // Item zum Aktuellen Raum hinzufügen
@@ -51,7 +52,7 @@ var textAdventure;
                 textAdventure.jsonConfigData.Rooms[textAdventure.getIndexOfCurrentRoom(textAdventure.currentRoom)].item.push(theItem);
             }
             // Entfernt den Polizisten aus der JSON-Datei
-            textAdventure.jsonConfigData.Rooms[textAdventure.getIndexOfCurrentRoom(textAdventure.currentRoom)].person.polizei.splice(_inNumber - 1, _inNumber);
+            textAdventure.jsonConfigData.Rooms[textAdventure.getIndexOfCurrentRoom(textAdventure.currentRoom)].person.police.splice(_inNumber - 1, _inNumber);
             // Entfernt des Polizisten aus dem aktuellen Raum
             textAdventure.currentRoom.police.splice(_inNumber - 1, _inNumber);
             textAdventure.printOutput(output);
@@ -63,22 +64,22 @@ var textAdventure;
         for (let i = 0; i < textAdventure.getAllPersonsFromCurrentRoom().length; i++) {
             if (i === _inputNumber - 1) {
                 if (textAdventure.getAllPersonsFromCurrentRoom()[i] instanceof textAdventure.Police) {
-                    textAdventure.printOutput(getAllPolicemanFromCurrentRoom()[i].name + ": " + "<i>" + getAllPolicemanFromCurrentRoom()[i].text + "</i>");
+                    textAdventure.printOutput(getAllPolicemanFromCurrentRoom()[i].name + ": " + "<i>„" + getAllPolicemanFromCurrentRoom()[i].text + "“</i>");
                 }
                 if (textAdventure.getAllPersonsFromCurrentRoom()[i] instanceof textAdventure.Passanger) {
                     if ((Math.floor(Math.random() * Math.floor(2))) === 1) {
-                        textAdventure.printOutput(getAllPassangerFromCurrentRoom()[i - getAllPolicemanFromCurrentRoom().length].name + ": " + "<i>" + getAllPassangerFromCurrentRoom()[i - getAllPolicemanFromCurrentRoom().length].text + "</i>");
+                        textAdventure.printOutput(getAllPassangerFromCurrentRoom()[i - getAllPolicemanFromCurrentRoom().length].name + ": " + "<i>„" + getAllPassangerFromCurrentRoom()[i - getAllPolicemanFromCurrentRoom().length].text + "“</i>");
                     }
                     else {
-                        textAdventure.printOutput(getAllPassangerFromCurrentRoom()[i - getAllPolicemanFromCurrentRoom().length].name + ": " + "<i>" + getAllPassangerFromCurrentRoom()[i - getAllPolicemanFromCurrentRoom().length].text2 + "</i>");
+                        textAdventure.printOutput(getAllPassangerFromCurrentRoom()[i - getAllPolicemanFromCurrentRoom().length].name + ": " + "<i>„" + getAllPassangerFromCurrentRoom()[i - getAllPolicemanFromCurrentRoom().length].text2 + "“</i>");
                     }
                 }
                 if (textAdventure.getAllPersonsFromCurrentRoom()[i] instanceof textAdventure.Salesman) {
                     if ((Math.floor(Math.random() * Math.floor(2))) === 1) {
-                        textAdventure.printOutput(getAllSalesmanFromCurrentRoom()[i - (getAllPolicemanFromCurrentRoom().length + getAllPassangerFromCurrentRoom().length)].name + ": " + "<i>" + getAllSalesmanFromCurrentRoom()[i - (getAllPolicemanFromCurrentRoom().length + getAllPassangerFromCurrentRoom().length)].text + "</i>");
+                        textAdventure.printOutput(getAllSalesmanFromCurrentRoom()[i - (getAllPolicemanFromCurrentRoom().length + getAllPassangerFromCurrentRoom().length)].name + ": " + "<i>„" + getAllSalesmanFromCurrentRoom()[i - (getAllPolicemanFromCurrentRoom().length + getAllPassangerFromCurrentRoom().length)].text + "“</i>");
                     }
                     else {
-                        textAdventure.printOutput(getAllSalesmanFromCurrentRoom()[i - (getAllPolicemanFromCurrentRoom().length + getAllPassangerFromCurrentRoom().length)].name + ": " + "<i>" + getAllSalesmanFromCurrentRoom()[i - (getAllPolicemanFromCurrentRoom().length + getAllPassangerFromCurrentRoom().length)].text2 + "</i>");
+                        textAdventure.printOutput(getAllSalesmanFromCurrentRoom()[i - (getAllPolicemanFromCurrentRoom().length + getAllPassangerFromCurrentRoom().length)].name + ": " + "<i>„" + getAllSalesmanFromCurrentRoom()[i - (getAllPolicemanFromCurrentRoom().length + getAllPassangerFromCurrentRoom().length)].text2 + "“</i>");
                     }
                 }
             }
@@ -92,17 +93,17 @@ var textAdventure;
             output = output + "Mit wem möchtest du Reden?";
             for (let i = 0; i < textAdventure.getAllPersonsFromCurrentRoom().length; i++) {
                 if (textAdventure.getAllPersonsFromCurrentRoom()[i] instanceof textAdventure.Police) {
-                    output = output + "<br/>" + "[" + [i + 1] + "]" + " Polizei | " + textAdventure.getAllPersonsFromCurrentRoom()[i].name;
+                    output = output + "<br/>" + "<b>[" + [i + 1] + "]</b>" + " Polizei | " + textAdventure.getAllPersonsFromCurrentRoom()[i].name;
                 }
                 if (textAdventure.getAllPersonsFromCurrentRoom()[i] instanceof textAdventure.Passanger) {
-                    output = output + "<br/>" + "[" + [i + 1] + "]" + " Passant | " + textAdventure.getAllPersonsFromCurrentRoom()[i].name;
+                    output = output + "<br/>" + "<b>[" + [i + 1] + "]</b>" + " Passant | " + textAdventure.getAllPersonsFromCurrentRoom()[i].name;
                 }
                 if (textAdventure.getAllPersonsFromCurrentRoom()[i] instanceof textAdventure.Salesman) {
-                    output = output + "<br/>" + "[" + [i + 1] + "]" + " Verkäufer | " + textAdventure.getAllPersonsFromCurrentRoom()[i].name;
+                    output = output + "<br/>" + "<b>[" + [i + 1] + "]</b>" + " Verkäufer | " + textAdventure.getAllPersonsFromCurrentRoom()[i].name;
                 }
             }
         }
-        output = output + "<br/>Gebe die Nummer ein";
+        output = output + "<br/>Gebe die Nummer ein.";
         textAdventure.printOutput(output);
         textAdventure.gameSequenz = 5;
     }
@@ -161,7 +162,7 @@ var textAdventure;
                 textAdventure.jsonConfigData = JSON.parse(fr.result.toString());
                 // Deaktiviert den Button
                 loadFileButton.setAttribute("disabled", "");
-                textAdventure.printOutput("Wilkommen zurück " + (textAdventure.jsonConfigData.User.name).toUpperCase());
+                textAdventure.printOutput("Wilkommen zurück " + (textAdventure.jsonConfigData.User.name).toUpperCase() + ".");
                 textAdventure.gameSequenz++;
                 console.log(textAdventure.jsonConfigData);
                 textAdventure.startProgram(textAdventure.jsonConfigData);
@@ -177,7 +178,7 @@ var textAdventure;
         textAdventure.jsonConfigData.User.currentRoom = textAdventure.currentRoom.name;
         //Aktueller Lebensstand wird in die JSON-Datei geschrieben
         textAdventure.jsonConfigData.User.health = textAdventure.health;
-        textAdventure.printOutput("Das Spiel wird gespeichert. Schaue in deinen Downloads Ordner.");
+        textAdventure.printOutput("<div class='game-Over'><b>Das Spiel wurde gespeichert. Schaue in deinen Downloads.<br/>Zum Weiterspielen starte das Spiel und lade die Datei.</b></div>");
         save(textAdventure.jsonConfigData, "gameData");
     }
     textAdventure.saveGame = saveGame;
@@ -326,6 +327,7 @@ var textAdventure;
                         printOutput(quitGame());
                         break;
                     default:
+                        printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                         break;
                 }
                 break;
@@ -336,7 +338,7 @@ var textAdventure;
                     textAdventure.pullItemFromRoomAndPushToInventory(userInputAsNumber);
                 }
                 else {
-                    printOutput("Falsche eingabe");
+                    printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                 }
                 break;
             // Item Ablegen
@@ -346,7 +348,7 @@ var textAdventure;
                     textAdventure.pullItemFromInventoryAndPushToRoom(inputAsNumber);
                 }
                 else {
-                    printOutput("Falsche eingabe");
+                    printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                 }
                 break;
             // Mit Person reden
@@ -356,7 +358,7 @@ var textAdventure;
                     textAdventure.talkWithTheRightPerson(inputNumber);
                 }
                 else {
-                    printOutput("Falsche eingabe");
+                    printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                 }
                 break;
             // Polizei angreifen
@@ -366,7 +368,7 @@ var textAdventure;
                     textAdventure.attackThePickedPolice(inNumber);
                 }
                 else {
-                    printOutput("Falsche eingabe");
+                    printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                 }
                 break;
             default:
@@ -387,7 +389,7 @@ var textAdventure;
         // Setzt Spielername in der JSON-Datei
         textAdventure.jsonConfigData.User.name = _userInput;
         textAdventure.gameSequenz++;
-        printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
+        printOutput("Hallo " + _userInput.toUpperCase() + ", das Spiel startet in:");
         let timerNumber = 3;
         let refreshIntervalId = setInterval(function () {
             if (timerNumber < 2)
@@ -397,12 +399,12 @@ var textAdventure;
             // tslint:disable-next-line: align
         }, 700);
         setTimeout(function () {
-            let output = "Du befindest dich in der Bank und hast gerade den Schalter überfallen und dabei 20000 Euro erbeutet, flüchte so schnell wie möglich! <br/> <b>[h]</b> | Hilfe";
+            let output = "<b class='blue'>Du befindest dich in der Bank und hast gerade den Schalter überfallen und dabei 20000 Euro erbeutet. Flüchte so schnell wie möglich!</b> <br/> <b>[h]</b> | Hilfe";
             printOutput(output);
             // tslint:disable-next-line: align
         }, 2800);
         // Setzt den Anfangsraum fest
-        let bank = new textAdventure.Room(textAdventure.jsonConfigData.Rooms[0].name, textAdventure.jsonConfigData.Rooms[0].description, textAdventure.jsonConfigData.Rooms[0].person.polizei, textAdventure.jsonConfigData.Rooms[0].person.passant, textAdventure.jsonConfigData.Rooms[0].person.verkaeufer, textAdventure.jsonConfigData.Rooms[0].item, textAdventure.jsonConfigData.Rooms[0].neighbour);
+        let bank = new textAdventure.Room(textAdventure.jsonConfigData.Rooms[0].name, textAdventure.jsonConfigData.Rooms[0].description, textAdventure.jsonConfigData.Rooms[0].person.police, textAdventure.jsonConfigData.Rooms[0].person.passanger, textAdventure.jsonConfigData.Rooms[0].person.salesman, textAdventure.jsonConfigData.Rooms[0].item, textAdventure.jsonConfigData.Rooms[0].neighbour);
         textAdventure.currentRoom = bank;
         // Setzt das Anfangsleben fest
         textAdventure.health = textAdventure.jsonConfigData.User.health;
@@ -424,7 +426,7 @@ var textAdventure;
             }
         }
         else {
-            output = output + "Hier befinden sich keine Personen";
+            output = output + "Hier befinden sich keine Personen.";
         }
         return output;
     }
@@ -438,7 +440,7 @@ var textAdventure;
             }
         }
         else {
-            output = output + "Hier befinden sich keine Gegenstände";
+            output = output + "Hier befinden sich keine Gegenstände.";
         }
         return output;
     }
@@ -450,10 +452,10 @@ var textAdventure;
     function createNewRoom(_nameOfNewRoom) {
         for (let i = 0; i < textAdventure.jsonConfigData.Rooms.length; i++) {
             if (_nameOfNewRoom === textAdventure.jsonConfigData.Rooms[i].name) {
-                let theNewRoom = new textAdventure.Room(textAdventure.jsonConfigData.Rooms[i].name, textAdventure.jsonConfigData.Rooms[i].description, textAdventure.jsonConfigData.Rooms[i].person.polizei, textAdventure.jsonConfigData.Rooms[i].person.passant, textAdventure.jsonConfigData.Rooms[i].person.verkaeufer, textAdventure.jsonConfigData.Rooms[i].item, textAdventure.jsonConfigData.Rooms[i].neighbour);
+                let theNewRoom = new textAdventure.Room(textAdventure.jsonConfigData.Rooms[i].name, textAdventure.jsonConfigData.Rooms[i].description, textAdventure.jsonConfigData.Rooms[i].person.police, textAdventure.jsonConfigData.Rooms[i].person.passanger, textAdventure.jsonConfigData.Rooms[i].person.salesman, textAdventure.jsonConfigData.Rooms[i].item, textAdventure.jsonConfigData.Rooms[i].neighbour);
                 textAdventure.currentRoom = theNewRoom;
                 textAdventure.jsonConfigData.User.currentRoom = textAdventure.currentRoom.name;
-                printOutput("<b class='brown'>" + textAdventure.currentRoom.description + "</b><br/> <b>[h]</b> | Hilfe");
+                printOutput("<b class='blue'>" + textAdventure.currentRoom.description + "</b><br/> <b>[h]</b> | Hilfe");
             }
         }
     }
@@ -481,7 +483,7 @@ var textAdventure;
                 firstTime = false;
             }
         }
-        output = output + "-------------------------- <br/><b>[q]</b> | Spiel verlassen";
+        output = output + "-------------------------- <br/><b>[f]</b> | Spiel speichern </br><b>[q]</b> | Spiel verlassen";
         return output;
     }
     /**
@@ -506,25 +508,33 @@ var textAdventure;
     textAdventure.getAllPersonsFromCurrentRoom = getAllPersonsFromCurrentRoom;
     function gameWin() {
         textAdventure.gameSequenz = null;
-        let gameWinText = "Herzlichen Glückwunsch du hast Gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden<br/>in dem du dich verstecken kannst! <br/>";
+        let gameWinText = "Herzlichen Glückwunsch " + textAdventure.jsonConfigData.User.name + " hast gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden<br/>in dem du dich verstecken kannst! <br/> <br/>";
         // Überprüft, ob überhaupt Geld im Inventar ist
         if (!((new RegExp(" Euro")).test(textAdventure.inventory[0].name))) {
             gameWinText = gameWinText + "Leider hast du kein Geld erbeutet.";
         }
         // Überprüft wie viel Geld im Inventar ist und gibt jenachem unterschiedliche ausgaben aus
         if ((new RegExp(" Euro")).test(textAdventure.inventory[0].name)) {
-            gameWinText = gameWinText + "Du hast " + textAdventure.inventory[0].name + " von maximal 37000 Euro erbeutet. <br/>";
+            gameWinText = gameWinText + "Du hast " + textAdventure.inventory[0].name + " von maximal 40000 Euro erbeutet. <br/>";
             let money = +textAdventure.inventory[0].name.split(" ")[0];
-            if (money > 35000)
-                gameWinText = gameWinText + "Mit deinem Geld kaufst du in einem anderen Land ein Haus.";
-            else if (money > 25000)
-                gameWinText = gameWinText + "Mit deinem Geld kaufst du dir ein Teures Auto und führst ein schönes Leben.";
-            else if (money > 15000)
-                gameWinText = gameWinText + "Mit deinem Geld kaufst du dir eine Rolex und lebst dein Leben normal weiter.";
+            if (money === 40000)
+                gameWinText = gameWinText + "In der Garage befindet sich dein Komplize Jonny mit dem Fluchtfahrzeug. Ihr kommt ungesehen aus der Stadt und flüchtet nach Russland. Du lässt dein kriminelles Leben hinter dir und beginnst ein neues Leben auf einer Insel im pazifischen Ozean.";
+            else if (money > 39000)
+                gameWinText = gameWinText + "Du schnappst dir ein Fahrad aus der Garage und flüchtest aus der Stadt zu deiner Familie. Du kannst ihr mit dem Geld nun endlich das Leben ermöglichen, das du immer wolltest.";
+            else if (money > 30000)
+                gameWinText = gameWinText + "Du ziehst dich in der Garage um und flüchtest unbemerkt durch die Hintertür. Du lebst dein Leben normal in einer entfernet Stadt wieiter. Fünf Jahre später wurde der Fall neu aufgerollt. Durch deine DNA-Spuren an der Kleidung konntest du überführt werden. Es drohen dir nun 5 Jahre Haft.";
+            else if (money > 21000)
+                gameWinText = gameWinText + "Du flüchtest erfolgreich mit einem kleinen VW-Polo aus der Stadt. du bist überwältigt, wie schnell du eine Bank überfallen hast. In deinem Kopf planst du bereits den nächsten Überfall auf die Zentralbank.";
+            else if (money >= 20000)
+                gameWinText = gameWinText + "Mit einem Fluchfahrzeug in der Garage fährst du direkt ins nächstgelegene Casino. Innerhalb von 24 Stunden hast du dein komplettes Geld verspielt, woraufhin du neue Überfälle planst.";
             else if (money > 5000)
-                gameWinText = gameWinText + "Mit deinem Geld lebst du normal weiter, da es nicht für größere Ausgaben reicht.";
+                gameWinText = gameWinText + "Du hast die Beute der Bank unterwegs abgelegt. Die Polizei fand daran Fingerabdrücke und konnte dich mit Hilfe eines Phantombildes identifizieren. Du wurdest zu 7 Jahren Haft verurteilt.";
+            else if (money > 0)
+                gameWinText = gameWinText + "Dein Komplize Jessy ist außer sich vor Wut über die geringe Ausbeute. Er lässt dich alleine in der Garage zurück. Du lässt dein kriminelles Leben hinter dir und kaufst dir vom Geld eine Kugel Eis. ";
+            else if (money === 0)
+                gameWinText = gameWinText + "Du hast leider kein Geld erbeutet. Während der Flucht hast du bemerkt, dass Geld nicht alles ist. Du bist froh, dass du den Polizisten entwischt bist und deine Freiheit hast.";
         }
-        return gameWinText;
+        return "<div class='game-Win'><b>" + gameWinText + "</b><div>";
     }
     textAdventure.gameWin = gameWin;
     function gameOver(_gameOverText) {
@@ -545,7 +555,7 @@ var textAdventure;
      */
     function quitGame() {
         textAdventure.gameSequenz = null;
-        return "Spiel beendet, bis zum nächsten mal.";
+        return "Spiel beendet, bis zum nächsten Mal.";
     }
     /**
     * Funktion git den Aktuellen Lebenszustand des Spielers zurück
@@ -575,7 +585,7 @@ var textAdventure;
     function walkToEast() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (textAdventure.currentRoom.neighbour[3] != null) {
-            textAdventure.printOutput("Du läufst nach Osten");
+            textAdventure.printOutput("Du läufst nach Osten.");
             let roomInEast = textAdventure.currentRoom.neighbour[3];
             textAdventure.createNewRoom(roomInEast);
         }
@@ -590,12 +600,12 @@ var textAdventure;
     function walkToWast() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (textAdventure.currentRoom.neighbour[2] != null && textAdventure.currentRoom.neighbour[2] != "Polizeiwache") {
-            textAdventure.printOutput("Du läufst nach Westen");
+            textAdventure.printOutput("Du läufst nach Westen.");
             let roomInWest = textAdventure.currentRoom.neighbour[2];
             textAdventure.createNewRoom(roomInWest);
         }
         else if (textAdventure.currentRoom.neighbour[2] === "Polizeiwache") {
-            textAdventure.printOutput(textAdventure.gameOver("Du wurdest in der Polizeiwache identifiziert und Festgenommen.<br/> Das Spiel ist vorbei."));
+            textAdventure.printOutput(textAdventure.gameOver("<div class='game-Over'><b>Du wurdest in der Polizeiwache identifiziert und festgenommen.<br/> Das Spiel ist vorbei.</b></div>"));
         }
         else {
             textAdventure.printOutput("Nach Westen befindet sich kein Weg.");
@@ -608,12 +618,12 @@ var textAdventure;
     function walkToSouth() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (textAdventure.currentRoom.neighbour[1] != null && textAdventure.currentRoom.neighbour[1] != "Baustelle" && textAdventure.currentRoom.neighbour[1] != "Bank") {
-            textAdventure.printOutput("Du läufst nach Süden");
+            textAdventure.printOutput("Du läufst nach Süden.");
             let roomInSouth = textAdventure.currentRoom.neighbour[1];
             textAdventure.createNewRoom(roomInSouth);
         }
         else if (textAdventure.currentRoom.neighbour[1] === "Bank") {
-            textAdventure.printOutput(textAdventure.gameOver("Du bist zurück zum Tatort zurück gelaufen und wurdest von der Polizei geschnappt. <br/> Das Spiel ist vorbei."));
+            textAdventure.printOutput(textAdventure.gameOver("<div class='game-Over'> <b>Du bist zurück zum Tatort gelaufen und wurdest von der Polizei geschnappt. <br/> Das Spiel ist vorbei.</b><div/>"));
         }
         else if (textAdventure.currentRoom.neighbour[1] === "Baustelle") {
             textAdventure.printOutput("Hier befindet sich eine Baustelle, dieser Weg ist versperrt.");
@@ -629,7 +639,7 @@ var textAdventure;
     function walkToNorth() {
         // überprüft, ob der currentRoom in Norden ein Raum besitzt
         if (textAdventure.currentRoom.neighbour[0] != null && textAdventure.currentRoom.neighbour[0] != "Baustelle" && textAdventure.currentRoom.neighbour[0] != "Garage") {
-            textAdventure.printOutput("Du läufst nach Norden");
+            textAdventure.printOutput("Du läufst nach Norden.");
             let roomInNorth = textAdventure.currentRoom.neighbour[0];
             textAdventure.createNewRoom(roomInNorth);
         }
@@ -735,7 +745,7 @@ var textAdventure;
                     else {
                         textAdventure.health = 100;
                     }
-                    output = output + "<br/>Leben um 50% geheilt.";
+                    output = output + "<br/>Leben um 50% geheilt. Dein Gesundheitszustand beträgt nun " + textAdventure.health + "%.";
                 }
                 else if (item.name === "Verband") {
                     if (textAdventure.health + 25 < 100) {
@@ -744,7 +754,7 @@ var textAdventure;
                     else {
                         textAdventure.health = 100;
                     }
-                    output = output + "<br/>Leben um 25% geheilt.";
+                    output = output + "<br/>Leben um 25% geheilt. Dein Gesundheitszustand beträgt nun " + textAdventure.health + "%.";
                 }
                 else if (item.name === "Hustensaft") {
                     if (textAdventure.health + 5 < 100) {
@@ -753,13 +763,13 @@ var textAdventure;
                     else {
                         textAdventure.health = 100;
                     }
-                    output = output + "<br/>Leben um 5% geheilt.";
+                    output = output + "<br/>Leben um 5% geheilt. Dein Gesundheitszustand beträgt nun " + textAdventure.health + "%.";
                 }
                 else {
                     // Pusth das erstellte Item ins Inventar (wennes keine Spritze, Verband oder Hustensaft ist)
                     textAdventure.inventory.push(item);
                 }
-                textAdventure.printOutput("<p class='green'>&nbsp;+ " + item.name + " aufgenommen<p/>");
+                textAdventure.printOutput("<p class='green'>&nbsp;+ " + item.name + " aufgenommen<p/>" + output);
             }
         }
         textAdventure.gameSequenz = 2;
@@ -783,9 +793,15 @@ var textAdventure;
     }
     textAdventure.takeItem = takeItem;
     function outputInventory() {
-        let output = "In deinem Inventar befinden sich:";
-        for (let i = 0; i < textAdventure.inventory.length; i++) {
-            output = output + "<br/> - " + textAdventure.inventory[i].name;
+        let output = "";
+        if (textAdventure.inventory.length === 0) {
+            output = output + "In deinem Inventar befinden sich keine Gegenstände.";
+        }
+        else {
+            output = output + "In deinem Inventar befinden sich:";
+            for (let i = 0; i < textAdventure.inventory.length; i++) {
+                output = output + "<br/> - " + textAdventure.inventory[i].name;
+            }
         }
         return output;
     }
@@ -843,7 +859,6 @@ var textAdventure;
             this.salesman = this.createSalesman(_salesman);
             this.item = this.buildingItems(_item);
             this.neighbour = _neigbour;
-            // this.person = this.addAllPersons();
         }
         createPolice(_police) {
             let allPolice = [];

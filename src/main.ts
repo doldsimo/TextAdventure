@@ -132,6 +132,7 @@ namespace textAdventure {
                         printOutput(quitGame());
                         break;
                     default:
+                        printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                         break;
                 }
                 break;
@@ -141,7 +142,7 @@ namespace textAdventure {
                 if (Number.isInteger(userInputAsNumber) && _userInput != "") {
                     pullItemFromRoomAndPushToInventory(userInputAsNumber);
                 } else {
-                    printOutput("Falsche eingabe");
+                    printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                 }
                 break;
             // Item Ablegen
@@ -150,7 +151,7 @@ namespace textAdventure {
                 if (Number.isInteger(inputAsNumber) && _userInput != "") {
                     pullItemFromInventoryAndPushToRoom(inputAsNumber);
                 } else {
-                    printOutput("Falsche eingabe");
+                    printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                 }
                 break;
             // Mit Person reden
@@ -159,7 +160,7 @@ namespace textAdventure {
                 if (Number.isInteger(inputNumber) && _userInput != "") {
                     talkWithTheRightPerson(inputNumber);
                 } else {
-                    printOutput("Falsche eingabe");
+                    printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                 }
                 break;
             // Polizei angreifen
@@ -168,7 +169,7 @@ namespace textAdventure {
                 if (Number.isInteger(inNumber) && _userInput != "") {
                     attackThePickedPolice(inNumber);
                 } else {
-                    printOutput("Falsche eingabe");
+                    printOutput("„" + _userInput + "“ ist eine ungekannte Eingabe.");
                 }
                 break;
             default:
@@ -190,7 +191,7 @@ namespace textAdventure {
         // Setzt Spielername in der JSON-Datei
         jsonConfigData.User.name = _userInput;
         gameSequenz++;
-        printOutput("Hallo " + _userInput.toUpperCase() + " das Spiel startet in:");
+        printOutput("Hallo " + _userInput.toUpperCase() + ", das Spiel startet in:");
         let timerNumber: number = 3;
         let refreshIntervalId: number = setInterval(function (): void {
             if (timerNumber < 2)
@@ -200,12 +201,12 @@ namespace textAdventure {
             // tslint:disable-next-line: align
         }, 700);
         setTimeout(function (): void {
-            let output: string = "Du befindest dich in der Bank und hast gerade den Schalter überfallen und dabei 20000 Euro erbeutet, flüchte so schnell wie möglich! <br/> <b>[h]</b> | Hilfe";
+            let output: string = "<b class='blue'>Du befindest dich in der Bank und hast gerade den Schalter überfallen und dabei 20000 Euro erbeutet. Flüchte so schnell wie möglich!</b> <br/> <b>[h]</b> | Hilfe";
             printOutput(output);
             // tslint:disable-next-line: align
         }, 2800);
         // Setzt den Anfangsraum fest
-        let bank: Room = new Room(jsonConfigData.Rooms[0].name, jsonConfigData.Rooms[0].description, jsonConfigData.Rooms[0].person.polizei, jsonConfigData.Rooms[0].person.passant, jsonConfigData.Rooms[0].person.verkaeufer, jsonConfigData.Rooms[0].item, jsonConfigData.Rooms[0].neighbour);
+        let bank: Room = new Room(jsonConfigData.Rooms[0].name, jsonConfigData.Rooms[0].description, jsonConfigData.Rooms[0].person.police, jsonConfigData.Rooms[0].person.passanger, jsonConfigData.Rooms[0].person.salesman, jsonConfigData.Rooms[0].item, jsonConfigData.Rooms[0].neighbour);
         currentRoom = bank;
         // Setzt das Anfangsleben fest
         health = jsonConfigData.User.health;
@@ -227,7 +228,7 @@ namespace textAdventure {
                 }
             }
         } else {
-            output = output + "Hier befinden sich keine Personen";
+            output = output + "Hier befinden sich keine Personen.";
 
         }
         return output;
@@ -242,7 +243,7 @@ namespace textAdventure {
                 output = output + "<br/> - " + currentRoom.item[i].name;
             }
         } else {
-            output = output + "Hier befinden sich keine Gegenstände";
+            output = output + "Hier befinden sich keine Gegenstände.";
         }
         return output;
     }
@@ -255,10 +256,10 @@ namespace textAdventure {
     export function createNewRoom(_nameOfNewRoom: string): void {
         for (let i: number = 0; i < jsonConfigData.Rooms.length; i++) {
             if (_nameOfNewRoom === jsonConfigData.Rooms[i].name) {
-                let theNewRoom: Room = new Room(jsonConfigData.Rooms[i].name, jsonConfigData.Rooms[i].description, jsonConfigData.Rooms[i].person.polizei, jsonConfigData.Rooms[i].person.passant, jsonConfigData.Rooms[i].person.verkaeufer, jsonConfigData.Rooms[i].item, jsonConfigData.Rooms[i].neighbour);
+                let theNewRoom: Room = new Room(jsonConfigData.Rooms[i].name, jsonConfigData.Rooms[i].description, jsonConfigData.Rooms[i].person.police, jsonConfigData.Rooms[i].person.passanger, jsonConfigData.Rooms[i].person.salesman, jsonConfigData.Rooms[i].item, jsonConfigData.Rooms[i].neighbour);
                 currentRoom = theNewRoom;
                 jsonConfigData.User.currentRoom = currentRoom.name;
-                printOutput("<b class='brown'>" + currentRoom.description + "</b><br/> <b>[h]</b> | Hilfe");
+                printOutput("<b class='blue'>" + currentRoom.description + "</b><br/> <b>[h]</b> | Hilfe");
             }
         }
     }
@@ -286,7 +287,7 @@ namespace textAdventure {
                 firstTime = false;
             }
         }
-        output = output + "-------------------------- <br/><b>[q]</b> | Spiel verlassen";
+        output = output + "-------------------------- <br/><b>[f]</b> | Spiel speichern </br><b>[q]</b> | Spiel verlassen";
         return output;
     }
 
@@ -313,25 +314,33 @@ namespace textAdventure {
 
     export function gameWin(): string {
         gameSequenz = null;
-        let gameWinText: string = "Herzlichen Glückwunsch du hast Gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden<br/>in dem du dich verstecken kannst! <br/>";
+        let gameWinText: string = "Herzlichen Glückwunsch " + jsonConfigData.User.name + " hast gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden<br/>in dem du dich verstecken kannst! <br/> <br/>";
         // Überprüft, ob überhaupt Geld im Inventar ist
         if (!((new RegExp(" Euro")).test(inventory[0].name))) {
             gameWinText = gameWinText + "Leider hast du kein Geld erbeutet.";
         }
         // Überprüft wie viel Geld im Inventar ist und gibt jenachem unterschiedliche ausgaben aus
         if ((new RegExp(" Euro")).test(inventory[0].name)) {
-            gameWinText = gameWinText + "Du hast " + inventory[0].name + " von maximal 37000 Euro erbeutet. <br/>";
+            gameWinText = gameWinText + "Du hast " + inventory[0].name + " von maximal 40000 Euro erbeutet. <br/>";
             let money: number = +inventory[0].name.split(" ")[0];
-            if (money > 35000)
-                gameWinText = gameWinText + "Mit deinem Geld kaufst du in einem anderen Land ein Haus.";
-            else if (money > 25000)
-                gameWinText = gameWinText + "Mit deinem Geld kaufst du dir ein Teures Auto und führst ein schönes Leben.";
-            else if (money > 15000)
-                gameWinText = gameWinText + "Mit deinem Geld kaufst du dir eine Rolex und lebst dein Leben normal weiter.";
+            if (money === 40000)
+                gameWinText = gameWinText + "In der Garage befindet sich dein Komplize Jonny mit dem Fluchtfahrzeug. Ihr kommt ungesehen aus der Stadt und flüchtet nach Russland. Du lässt dein kriminelles Leben hinter dir und beginnst ein neues Leben auf einer Insel im pazifischen Ozean.";
+            else if (money > 39000)
+                gameWinText = gameWinText + "Du schnappst dir ein Fahrad aus der Garage und flüchtest aus der Stadt zu deiner Familie. Du kannst ihr mit dem Geld nun endlich das Leben ermöglichen, das du immer wolltest.";
+            else if (money > 30000)
+                gameWinText = gameWinText + "Du ziehst dich in der Garage um und flüchtest unbemerkt durch die Hintertür. Du lebst dein Leben normal in einer entfernet Stadt wieiter. Fünf Jahre später wurde der Fall neu aufgerollt. Durch deine DNA-Spuren an der Kleidung konntest du überführt werden. Es drohen dir nun 5 Jahre Haft.";
+            else if (money > 21000)
+                gameWinText = gameWinText + "Du flüchtest erfolgreich mit einem kleinen VW-Polo aus der Stadt. du bist überwältigt, wie schnell du eine Bank überfallen hast. In deinem Kopf planst du bereits den nächsten Überfall auf die Zentralbank.";
+            else if (money >= 20000)
+                gameWinText = gameWinText + "Mit einem Fluchfahrzeug in der Garage fährst du direkt ins nächstgelegene Casino. Innerhalb von 24 Stunden hast du dein komplettes Geld verspielt, woraufhin du neue Überfälle planst.";
             else if (money > 5000)
-                gameWinText = gameWinText + "Mit deinem Geld lebst du normal weiter, da es nicht für größere Ausgaben reicht.";
+                gameWinText = gameWinText + "Du hast die Beute der Bank unterwegs abgelegt. Die Polizei fand daran Fingerabdrücke und konnte dich mit Hilfe eines Phantombildes identifizieren. Du wurdest zu 7 Jahren Haft verurteilt.";
+            else if (money > 0)
+                gameWinText = gameWinText + "Dein Komplize Jessy ist außer sich vor Wut über die geringe Ausbeute. Er lässt dich alleine in der Garage zurück. Du lässt dein kriminelles Leben hinter dir und kaufst dir vom Geld eine Kugel Eis. ";
+            else if (money === 0)
+                gameWinText = gameWinText + "Du hast leider kein Geld erbeutet. Während der Flucht hast du bemerkt, dass Geld nicht alles ist. Du bist froh, dass du den Polizisten entwischt bist und deine Freiheit hast.";
         }
-        return gameWinText;
+        return "<div class='game-Win'><b>" + gameWinText + "</b><div>";
     }
 
     export function gameOver(_gameOverText: string): string {
@@ -353,7 +362,7 @@ namespace textAdventure {
      */
     function quitGame(): string {
         gameSequenz = null;
-        return "Spiel beendet, bis zum nächsten mal.";
+        return "Spiel beendet, bis zum nächsten Mal.";
     }
 
     /**
