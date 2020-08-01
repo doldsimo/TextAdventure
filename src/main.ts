@@ -8,7 +8,7 @@ namespace textAdventure {
     let inventory: Item[] = []; // Inventar 
     let health: number; // Lebensanzeige
 
-    loadJsonData();
+    startloadJsonData();
 
     let inputField: HTMLInputElement = document.getElementById("inputField") as HTMLInputElement;
     inputField.addEventListener("keyup", function (_event: KeyboardEvent): void {
@@ -34,8 +34,12 @@ namespace textAdventure {
             money = new Item(jsonConfigData.User.item[0].name);
             inventory.push(money);
         } else {
+            // Erstellen des gespeicherten Raums
             createNewRoom(jsonConfigData.User.currentRoom);
+            // Setzen des gespeicherten Lebens
             health = jsonConfigData.User.health;
+            // Setzen des Inventars
+            inventory = jsonConfigData.User.item;
             gameSequenz = 2;
         }
     }
@@ -172,10 +176,11 @@ namespace textAdventure {
         }
     }
 
-
     function saveGame(): void {
         //Aktuelles Inventar wird in die JSON-Datei geschrieben
         jsonConfigData.User.item = inventory;
+        //Current Room wird festgelegt
+        jsonConfigData.User.currentRoom = currentRoom.name;
         //Aktueller Lebensstand wird in die JSON-Datei geschrieben
         jsonConfigData.User.health = health;
         printOutput("Das Spiel wird gespeichert. Schaue in deinen Downloads Ordner.");
@@ -467,7 +472,8 @@ namespace textAdventure {
                 loadFileButton.setAttribute("disabled", "");
                 printOutput("Wilkommen zurück " + (jsonConfigData.User.name).toUpperCase());
                 gameSequenz++;
-                startProgram(JSON.parse(fr.result.toString()));
+                console.log(jsonConfigData);
+                startProgram(jsonConfigData);
             };
             fr.readAsText(this.files[0]);
         });
@@ -728,7 +734,7 @@ namespace textAdventure {
      * 
      * @param _theOutputString: String | String welcher ausgegeben werden soll
      */
-    function printOutput(_theOutputString: string): void {
+    export function printOutput(_theOutputString: string): void {
         let divConsole: HTMLDivElement = document.getElementById("console") as HTMLDivElement;
         divConsole.innerHTML += _theOutputString + "<br/>" + "<hr>"; // Fuegt Inhalt in den Div-Console Container ein
         divConsole.scrollTop = divConsole.scrollHeight - divConsole.clientHeight;   // Nach jeder neuen Consolen Ausgabe nach unten Scrollen

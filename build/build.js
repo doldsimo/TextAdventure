@@ -4,11 +4,11 @@ var textAdventure;
     /**
      * Funktion Lädt Json-Datei
      */
-    async function loadJsonData() {
+    async function startloadJsonData() {
         let content = await load("data/allGameInformation.json");
         textAdventure.startProgram(content);
     }
-    textAdventure.loadJsonData = loadJsonData;
+    textAdventure.startloadJsonData = startloadJsonData;
     /**
      * Funktion lädt die JSON-Datei und gibt diese zurück
      *
@@ -16,20 +16,14 @@ var textAdventure;
      * @return (json): JSONObject | Gibt die geladenen Json-Daten zurück
      */
     async function load(_filename) {
-        // console.log("Start fetch");
         let response = await fetch(_filename);
         let text = await response.text();
         let json = JSON.parse(text);
-        // alternative: json = await response.json();
-        // console.log("Done fetch");
         return (json);
     }
     function save(_content, _filename) {
         //JSON-Objekt in Text umwandeln
         let myJson = JSON.stringify(_content);
-        console.log(_content.toString());
-        console.log(myJson);
-        console.log(_content);
         let blob = new Blob([myJson], { type: "application/json" });
         let url = window.URL.createObjectURL(blob);
         //*/ using anchor element for download
@@ -52,7 +46,7 @@ var textAdventure;
     let money; // Akutelles Geld
     let inventory = []; // Inventar 
     let health; // Lebensanzeige
-    textAdventure.loadJsonData();
+    textAdventure.startloadJsonData();
     let inputField = document.getElementById("inputField");
     inputField.addEventListener("keyup", function (_event) {
         if (_event.key === "Enter") {
@@ -77,8 +71,12 @@ var textAdventure;
             inventory.push(money);
         }
         else {
+            // Erstellen des gespeicherten Raums
             createNewRoom(jsonConfigData.User.currentRoom);
+            // Setzen des gespeicherten Lebens
             health = jsonConfigData.User.health;
+            // Setzen des Inventars
+            inventory = jsonConfigData.User.item;
             gameSequenz = 2;
         }
     }
@@ -221,6 +219,8 @@ var textAdventure;
     function saveGame() {
         //Aktuelles Inventar wird in die JSON-Datei geschrieben
         jsonConfigData.User.item = inventory;
+        //Current Room wird festgelegt
+        jsonConfigData.User.currentRoom = currentRoom.name;
         //Aktueller Lebensstand wird in die JSON-Datei geschrieben
         jsonConfigData.User.health = health;
         printOutput("Das Spiel wird gespeichert. Schaue in deinen Downloads Ordner.");
@@ -506,7 +506,8 @@ var textAdventure;
                 loadFileButton.setAttribute("disabled", "");
                 printOutput("Wilkommen zurück " + (jsonConfigData.User.name).toUpperCase());
                 gameSequenz++;
-                startProgram(JSON.parse(fr.result.toString()));
+                console.log(jsonConfigData);
+                startProgram(jsonConfigData);
             };
             fr.readAsText(this.files[0]);
         });
@@ -762,6 +763,7 @@ var textAdventure;
         divConsole.innerHTML += _theOutputString + "<br/>" + "<hr>"; // Fuegt Inhalt in den Div-Console Container ein
         divConsole.scrollTop = divConsole.scrollHeight - divConsole.clientHeight; // Nach jeder neuen Consolen Ausgabe nach unten Scrollen
     }
+    textAdventure.printOutput = printOutput;
 })(textAdventure || (textAdventure = {}));
 var textAdventure;
 (function (textAdventure) {
