@@ -1,7 +1,3 @@
-body {
-	margin: 0;
-	font-family: 'Mulish';
-}
 .grid-container {
 	height: 100vh;
 	display: grid;
