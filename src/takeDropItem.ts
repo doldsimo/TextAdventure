@@ -1,4 +1,9 @@
 namespace textAdventure {
+    /**
+     * Funktion nimmt das Item aus dem Inventar und pusht es in den aktuellen Raum
+     * 
+     * @param _inputAsNumber: number | nummer des zu entfernenden Item
+     */
     export function pullItemFromInventoryAndPushToRoom(_inputAsNumber: number): void {
         for (let i: number = 0; i < inventory.length; i++) {
             if (i === _inputAsNumber - 1) {
@@ -13,6 +18,10 @@ namespace textAdventure {
         gameSequenz = 2;
     }
 
+    /**
+     * Funktion gibt die Moeglickeiten an, welche Items abgelegt werden koennen
+     * 
+     */
     export function dropItem(): void {
         let output: string = "";
         // Überprüfung, ob sich im Items im Inventar befinden
@@ -29,6 +38,11 @@ namespace textAdventure {
         printOutput(output);
     }
 
+    /**
+     * Funktion nimmt das Item aus dem aktuellen Raum und pusht es ins Inventar
+     * 
+     * @param _userInputAsNumber: number | nummer des zu entfernenden Item
+     */
     export function pullItemFromRoomAndPushToInventory(_userInputAsNumber: number): void {
         for (let i: number = 0; i < currentRoom.item.length; i++) {
             if (i === _userInputAsNumber - 1) {
@@ -99,6 +113,10 @@ namespace textAdventure {
         gameSequenz = 2;
     }
 
+    /**
+     * Funktion gibt die Moeglickeiten an, welche Items aufgenommen werden koennen
+     * 
+     */
     export function takeItem(): void {
         let output: string = "";
         // Überprüfung, ob sich im Raum Items befinden
@@ -115,6 +133,9 @@ namespace textAdventure {
         printOutput(output);
     }
 
+    /**
+     * Funktion gibt das aktuelle Inventar aus
+     */
     export function outputInventory(): string {
         let output: string = "";
         if (inventory.length === 0) {

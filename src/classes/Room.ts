@@ -19,6 +19,7 @@ namespace textAdventure {
             this.neighbour = _neigbour;
         }
 
+
         private createPolice(_police: Police[]): Police[] {
             let allPolice: Police[] = [];
             for (let i: number = 0; i < _police.length; i++) {
@@ -47,12 +48,6 @@ namespace textAdventure {
             return allSalesman;
         }
 
-        /**
-         * Erstellt alle Items welche sich im jeweiligen Raum befinden 
-         * 
-         * @param _item | Item Objekt
-         * @return items | Array mit allen Items
-         */
         private buildingItems(_item: Item[]): Item[] {
             let items: Item[] = [];
             for (let i: number = 0; i < _item.length; i++) {

@@ -65,8 +65,6 @@ namespace textAdventure {
             for (let i: number = 0; i < inventory.length; i++) {
                 if (inventory[i].name === "Garagenschlüssel") {
                     printOutput("Garage mit Garagenschlüssel geöffnet");
-                    // let roomInNorth: string = currentRoom.neighbour[0];
-                    // createNewRoom(roomInNorth);
                     nokey = false;
                     printOutput(gameWin());
                 }

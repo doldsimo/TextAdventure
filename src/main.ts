@@ -177,6 +177,12 @@ namespace textAdventure {
         }
     }
 
+    /**
+     * Funktion gibt den Index des akutellen Raumes zurueck
+     * 
+     * @param _currentRom: Room | aktueller Raum
+     * @returns index: number | Index von aktuellen Raum
+     */
     export function getIndexOfCurrentRoom(_currentRom: Room): number {
         let index: number;
         for (let i: number = 0; i < jsonConfigData.Rooms.length; i++) {
@@ -187,6 +193,11 @@ namespace textAdventure {
         return index;
     }
 
+    /**
+     * Funktion startet dsa Spiel regulär und erhöht die gameSequenz auf 2
+     * 
+     * @param _userInput: string | Input des Users vom InputField
+     */
     function startGameRegulary(_userInput: string): void {
         // Setzt Spielername in der JSON-Datei
         jsonConfigData.User.name = _userInput;
@@ -212,6 +223,11 @@ namespace textAdventure {
         health = jsonConfigData.User.health;
     }
 
+    /**
+     * Funktion gibt alle Personen im akutellen Raum zurueck
+     * 
+     * @returns output: string | alle Personen in einem string
+     */
     function outputPersonsInRoom(): string {
         let output: string = "";
         if (getAllPersonsFromCurrentRoom().length != 0) {
@@ -229,11 +245,14 @@ namespace textAdventure {
             }
         } else {
             output = output + "Hier befinden sich keine Personen.";
-
         }
         return output;
     }
-
+    /**
+     * Funktion gibt alle Items des aktuellen Raums zurueck
+     * 
+     * @returns output: string | alle Items in einem String
+     */
     function outputItemsInRoom(): string {
         let output: string = "";
         // Überprüfung, ob sich im Raum Items befinden
@@ -312,6 +331,10 @@ namespace textAdventure {
         return allPersons;
     }
 
+    /**
+     * Funktion regelt die unterschiedlichen Enden des spiels; je nachdem wie viel Geld der Spieler hat
+     * 
+     */
     export function gameWin(): string {
         gameSequenz = null;
         let gameWinText: string = "Herzlichen Glückwunsch " + jsonConfigData.User.name.toUpperCase() + ". Du hast gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden,<br/>in dem du dich verstecken kannst! <br/> <br/>";
@@ -343,6 +366,11 @@ namespace textAdventure {
         return "<div class='game-Win'><b>" + gameWinText + "</b><div>";
     }
 
+    /**
+     * Funktion beendet das Spiel
+     * 
+     * @param _gameOverText: string | text welcher ausgegeben werden soll
+     */
     export function gameOver(_gameOverText: string): string {
         gameSequenz = null;
         return _gameOverText;

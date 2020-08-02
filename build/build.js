@@ -1,6 +1,9 @@
 "use strict";
 var textAdventure;
 (function (textAdventure) {
+    /**
+     * Funktion gibt aus, welche Polizisten angegriffen werden können
+     */
     function attackPolice() {
         let output = "";
         // Überprüft, ob ein im aktuellen Raum ist
@@ -21,6 +24,11 @@ var textAdventure;
         textAdventure.printOutput(output);
     }
     textAdventure.attackPolice = attackPolice;
+    /**
+     * Funktion greift den Polizisten an, welcher ausgewaehlt wurde
+     *
+     * @param _inNumber: number | nummer des Polizisten
+     */
     function attackThePickedPolice(_inNumber) {
         let output = "";
         // Leben abziehen
@@ -60,6 +68,11 @@ var textAdventure;
         }
     }
     textAdventure.attackThePickedPolice = attackThePickedPolice;
+    /**
+     * Funktion gib den Text von der Person aus, welche angeredet wurde
+     *
+     * @param _inputNumber: number | Nummer der Person
+     */
     function talkWithTheRightPerson(_inputNumber) {
         for (let i = 0; i < textAdventure.getAllPersonsFromCurrentRoom().length; i++) {
             if (i === _inputNumber - 1) {
@@ -87,6 +100,10 @@ var textAdventure;
         textAdventure.gameSequenz = 2;
     }
     textAdventure.talkWithTheRightPerson = talkWithTheRightPerson;
+    /**
+     * Funktion gibt aus, mit welchen Personen man reden kann
+     *
+     */
     function talkWithPerson() {
         let output = "";
         if (textAdventure.getAllPersonsFromCurrentRoom().length != 0) {
@@ -108,6 +125,11 @@ var textAdventure;
         textAdventure.gameSequenz = 5;
     }
     textAdventure.talkWithPerson = talkWithPerson;
+    /**
+     * Funktion gibt alle Polizisten im aktuellen Raum zurueck
+     *
+     * @returns allPoliceman: Police[]
+     */
     function getAllPolicemanFromCurrentRoom() {
         let allPoliceman = [];
         for (let i = 0; i < textAdventure.currentRoom.police.length; i++) {
@@ -115,6 +137,11 @@ var textAdventure;
         }
         return allPoliceman;
     }
+    /**
+     * Funktion gibt alle Passanten im aktuellen Raum zurueck
+     *
+     * @returns allPassanger: Passanger[]
+     */
     function getAllPassangerFromCurrentRoom() {
         let allPassanger = [];
         for (let i = 0; i < textAdventure.currentRoom.passanger.length; i++) {
@@ -122,6 +149,11 @@ var textAdventure;
         }
         return allPassanger;
     }
+    /**
+     * Funktion gibt alle Salesman im aktuellen Raum zurueck
+     *
+     * @returns allSalesman: Salesman[]
+     */
     function getAllSalesmanFromCurrentRoom() {
         let allSalesman = [];
         for (let i = 0; i < textAdventure.currentRoom.salesman.length; i++) {
@@ -171,6 +203,9 @@ var textAdventure;
         });
     }
     textAdventure.loadUsersJSONData = loadUsersJSONData;
+    /**
+     * Funktion speichert alle aktuellen Spieldaten in der JSON-Datei
+     */
     function saveGame() {
         //Aktuelles Inventar wird in die JSON-Datei geschrieben
         textAdventure.jsonConfigData.User.item = textAdventure.inventory;
@@ -182,6 +217,12 @@ var textAdventure;
         save(textAdventure.jsonConfigData, "gameData");
     }
     textAdventure.saveGame = saveGame;
+    /**
+     * Funktion wandelt das JSON-Objekt in einen String um und downloaded den File
+     *
+     * @param _content: JSONData
+     * @param _filename: string
+     */
     function save(_content, _filename) {
         //JSON-Objekt in Text umwandeln
         let myJson = JSON.stringify(_content);
@@ -374,6 +415,12 @@ var textAdventure;
                 break;
         }
     }
+    /**
+     * Funktion gibt den Index des akutellen Raumes zurueck
+     *
+     * @param _currentRom: Room | aktueller Raum
+     * @returns index: number | Index von aktuellen Raum
+     */
     function getIndexOfCurrentRoom(_currentRom) {
         let index;
         for (let i = 0; i < textAdventure.jsonConfigData.Rooms.length; i++) {
@@ -384,6 +431,11 @@ var textAdventure;
         return index;
     }
     textAdventure.getIndexOfCurrentRoom = getIndexOfCurrentRoom;
+    /**
+     * Funktion startet dsa Spiel regulär und erhöht die gameSequenz auf 2
+     *
+     * @param _userInput: string | Input des Users vom InputField
+     */
     function startGameRegulary(_userInput) {
         // Setzt Spielername in der JSON-Datei
         textAdventure.jsonConfigData.User.name = _userInput;
@@ -408,6 +460,11 @@ var textAdventure;
         // Setzt das Anfangsleben fest
         textAdventure.health = textAdventure.jsonConfigData.User.health;
     }
+    /**
+     * Funktion gibt alle Personen im akutellen Raum zurueck
+     *
+     * @returns output: string | alle Personen in einem string
+     */
     function outputPersonsInRoom() {
         let output = "";
         if (getAllPersonsFromCurrentRoom().length != 0) {
@@ -429,6 +486,11 @@ var textAdventure;
         }
         return output;
     }
+    /**
+     * Funktion gibt alle Items des aktuellen Raums zurueck
+     *
+     * @returns output: string | alle Items in einem String
+     */
     function outputItemsInRoom() {
         let output = "";
         // Überprüfung, ob sich im Raum Items befinden
@@ -505,6 +567,10 @@ var textAdventure;
         return allPersons;
     }
     textAdventure.getAllPersonsFromCurrentRoom = getAllPersonsFromCurrentRoom;
+    /**
+     * Funktion regelt die unterschiedlichen Enden des spiels; je nachdem wie viel Geld der Spieler hat
+     *
+     */
     function gameWin() {
         textAdventure.gameSequenz = null;
         let gameWinText = "Herzlichen Glückwunsch " + textAdventure.jsonConfigData.User.name.toUpperCase() + ". Du hast gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden,<br/>in dem du dich verstecken kannst! <br/> <br/>";
@@ -536,6 +602,11 @@ var textAdventure;
         return "<div class='game-Win'><b>" + gameWinText + "</b><div>";
     }
     textAdventure.gameWin = gameWin;
+    /**
+     * Funktion beendet das Spiel
+     *
+     * @param _gameOverText: string | text welcher ausgegeben werden soll
+     */
     function gameOver(_gameOverText) {
         textAdventure.gameSequenz = null;
         return _gameOverText;
@@ -651,8 +722,6 @@ var textAdventure;
             for (let i = 0; i < textAdventure.inventory.length; i++) {
                 if (textAdventure.inventory[i].name === "Garagenschlüssel") {
                     textAdventure.printOutput("Garage mit Garagenschlüssel geöffnet");
-                    // let roomInNorth: string = currentRoom.neighbour[0];
-                    // createNewRoom(roomInNorth);
                     nokey = false;
                     textAdventure.printOutput(textAdventure.gameWin());
                 }
@@ -669,6 +738,11 @@ var textAdventure;
 })(textAdventure || (textAdventure = {}));
 var textAdventure;
 (function (textAdventure) {
+    /**
+     * Funktion nimmt das Item aus dem Inventar und pusht es in den aktuellen Raum
+     *
+     * @param _inputAsNumber: number | nummer des zu entfernenden Item
+     */
     function pullItemFromInventoryAndPushToRoom(_inputAsNumber) {
         for (let i = 0; i < textAdventure.inventory.length; i++) {
             if (i === _inputAsNumber - 1) {
@@ -683,6 +757,10 @@ var textAdventure;
         textAdventure.gameSequenz = 2;
     }
     textAdventure.pullItemFromInventoryAndPushToRoom = pullItemFromInventoryAndPushToRoom;
+    /**
+     * Funktion gibt die Moeglickeiten an, welche Items abgelegt werden koennen
+     *
+     */
     function dropItem() {
         let output = "";
         // Überprüfung, ob sich im Items im Inventar befinden
@@ -700,6 +778,11 @@ var textAdventure;
         textAdventure.printOutput(output);
     }
     textAdventure.dropItem = dropItem;
+    /**
+     * Funktion nimmt das Item aus dem aktuellen Raum und pusht es ins Inventar
+     *
+     * @param _userInputAsNumber: number | nummer des zu entfernenden Item
+     */
     function pullItemFromRoomAndPushToInventory(_userInputAsNumber) {
         for (let i = 0; i < textAdventure.currentRoom.item.length; i++) {
             if (i === _userInputAsNumber - 1) {
@@ -774,6 +857,10 @@ var textAdventure;
         textAdventure.gameSequenz = 2;
     }
     textAdventure.pullItemFromRoomAndPushToInventory = pullItemFromRoomAndPushToInventory;
+    /**
+     * Funktion gibt die Moeglickeiten an, welche Items aufgenommen werden koennen
+     *
+     */
     function takeItem() {
         let output = "";
         // Überprüfung, ob sich im Raum Items befinden
@@ -791,6 +878,9 @@ var textAdventure;
         textAdventure.printOutput(output);
     }
     textAdventure.takeItem = takeItem;
+    /**
+     * Funktion gibt das aktuelle Inventar aus
+     */
     function outputInventory() {
         let output = "";
         if (textAdventure.inventory.length === 0) {
@@ -883,12 +973,6 @@ var textAdventure;
             }
             return allSalesman;
         }
-        /**
-         * Erstellt alle Items welche sich im jeweiligen Raum befinden
-         *
-         * @param _item | Item Objekt
-         * @return items | Array mit allen Items
-         */
         buildingItems(_item) {
             let items = [];
             for (let i = 0; i < _item.length; i++) {

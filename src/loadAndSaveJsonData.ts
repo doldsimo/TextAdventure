@@ -36,7 +36,9 @@ namespace textAdventure {
             fr.readAsText(this.files[0]);
         });
     }
-
+    /**
+     * Funktion speichert alle aktuellen Spieldaten in der JSON-Datei
+     */
     export function saveGame(): void {
         //Aktuelles Inventar wird in die JSON-Datei geschrieben
         jsonConfigData.User.item = inventory;
@@ -47,7 +49,12 @@ namespace textAdventure {
         printOutput("<div class='game-Over'><b>Das Spiel wurde gespeichert. Schaue in deinen Downloads.<br/>Zum Weiterspielen starte das Spiel und lade die Datei.</b></div>");
         save(jsonConfigData, "gameData");
     }
-
+    /**
+     * Funktion wandelt das JSON-Objekt in einen String um und downloaded den File 
+     * 
+     * @param _content: JSONData 
+     * @param _filename: string
+     */
     export function save(_content: JSONData, _filename: string): void {
         //JSON-Objekt in Text umwandeln
         let myJson: string = JSON.stringify(_content);

@@ -1,5 +1,7 @@
 namespace textAdventure {
-
+    /**
+     * Funktion gibt aus, welche Polizisten angegriffen werden können
+     */
     export function attackPolice(): void {
         let output: string = "";
         // Überprüft, ob ein im aktuellen Raum ist
@@ -17,9 +19,14 @@ namespace textAdventure {
             gameSequenz = 2;
         }
         printOutput(output);
-        
+
     }
 
+    /**
+     * Funktion greift den Polizisten an, welcher ausgewaehlt wurde
+     * 
+     * @param _inNumber: number | nummer des Polizisten
+     */
     export function attackThePickedPolice(_inNumber: number): void {
         let output: string = "";
         // Leben abziehen
@@ -58,6 +65,11 @@ namespace textAdventure {
         }
     }
 
+    /**
+     * Funktion gib den Text von der Person aus, welche angeredet wurde
+     * 
+     * @param _inputNumber: number | Nummer der Person
+     */
     export function talkWithTheRightPerson(_inputNumber: number): void {
         for (let i: number = 0; i < getAllPersonsFromCurrentRoom().length; i++) {
             if (i === _inputNumber - 1) {
@@ -84,6 +96,10 @@ namespace textAdventure {
     }
 
 
+    /**
+     * Funktion gibt aus, mit welchen Personen man reden kann
+     * 
+     */
     export function talkWithPerson(): void {
         let output: string = "";
         if (getAllPersonsFromCurrentRoom().length != 0) {
@@ -106,6 +122,11 @@ namespace textAdventure {
     }
 
 
+    /**
+     * Funktion gibt alle Polizisten im aktuellen Raum zurueck
+     * 
+     * @returns allPoliceman: Police[]
+     */
     function getAllPolicemanFromCurrentRoom(): Police[] {
         let allPoliceman: Police[] = [];
         for (let i: number = 0; i < currentRoom.police.length; i++) {
@@ -113,6 +134,12 @@ namespace textAdventure {
         }
         return allPoliceman;
     }
+
+    /**
+     * Funktion gibt alle Passanten im aktuellen Raum zurueck
+     * 
+     * @returns allPassanger: Passanger[]
+     */
     function getAllPassangerFromCurrentRoom(): Passanger[] {
         let allPassanger: Passanger[] = [];
         for (let i: number = 0; i < currentRoom.passanger.length; i++) {
@@ -120,6 +147,12 @@ namespace textAdventure {
         }
         return allPassanger;
     }
+
+    /**
+     * Funktion gibt alle Salesman im aktuellen Raum zurueck
+     * 
+     * @returns allSalesman: Salesman[]
+     */
     function getAllSalesmanFromCurrentRoom(): Salesman[] {
         let allSalesman: Salesman[] = [];
         for (let i: number = 0; i < currentRoom.salesman.length; i++) {
