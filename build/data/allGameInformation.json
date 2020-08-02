@@ -108,7 +108,7 @@
 			"description": "Das ist der Wachplatz, hier sind sehr viele Polizisten unterwegs.",
 			"person": {
 				"police": [
-					{ "name": "Ole", "text": "Ich habe keine Zeit zu reden. Sehen Sie nicht, dass ich in einem wichtigen Einatz bin?", "life": 100, "item": [{ "name": "Pistole" },{ "name": "100 Euro" }] },
+					{ "name": "Ole", "text": "Ich habe keine Zeit zu reden. Sehen Sie nicht, dass ich in einem wichtigen Einsatz bin?", "life": 100, "item": [{ "name": "Pistole" },{ "name": "100 Euro" }] },
 					{ "name": "Jule", "text": "Halt Stop! Sie sehen genau so aus, wie der Mann, der die Bank überfallen hat!", "life": 100, "item": [{ "name": "Autoschlüssel" },{ "name": "500 Euro" }] },
 					{ "name": "Kalle", "text": "Gehen Sie bitte weiter, wir sind hier mit einem wichtigen Fall beschäftigt.", "life": 100, "item": [{ "name": "Zigaretten" },{ "name": "250 Euro" }] },
 					{ "name": "Oliver", "text": "Bleiben Sie kurz stehen; Sie kommen mir sehr bekannt vor. Kann ich bitte Ihren Ausweis sehen?", "life": 100, "item": [{ "name": "Handschellen" }] }	

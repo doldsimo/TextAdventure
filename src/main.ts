@@ -19,6 +19,7 @@ namespace textAdventure {
         }
     });
 
+
     /**
      * Funktion startet das Spiel
      * 
@@ -27,9 +28,8 @@ namespace textAdventure {
     export function startProgram(_content: JSONData): void {
         jsonConfigData = _content;
         // Fuege das anfang Item zum Inventar hinzu
-        // inventory.push(new Item(jsonConfigData.User.item[0].name));
         if (gameSequenz === 0) {
-            printOutput("Willkommen bei ESCAPE. <br/> Starte ein neues Spiel, gebe „start“. <br/> Laden einen Spielstand „load“.");
+            printOutput("Willkommen bei ESCAPE. <br/> Starte ein neues Spiel mit „start“. <br/>Lade einen Spielstand mit „load“.");
             //Fuege das Geld der JSON Datei in die Money Variable und ins Inventar ein
             money = new Item(jsonConfigData.User.item[0].name);
             inventory.push(money);
@@ -113,7 +113,7 @@ namespace textAdventure {
                         break;
                     case "leben":
                     case "l":
-                        printOutput(showlife());
+                        printOutput(showLife());
                         break;
                     case "reden":
                     case "r":
@@ -127,7 +127,7 @@ namespace textAdventure {
                     case "f":
                         saveGame();
                         break;
-                    case "verlassen":
+                    case "beenden":
                     case "q":
                         printOutput(quitGame());
                         break;
@@ -314,7 +314,7 @@ namespace textAdventure {
 
     export function gameWin(): string {
         gameSequenz = null;
-        let gameWinText: string = "Herzlichen Glückwunsch " + jsonConfigData.User.name + " hast gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden<br/>in dem du dich verstecken kannst! <br/> <br/>";
+        let gameWinText: string = "Herzlichen Glückwunsch " + jsonConfigData.User.name.toUpperCase() + ". Du hast gewonnen!<br/>Die Polizei hat dich nicht geschnappt und du hast einen Unterschlupf gefunden,<br/>in dem du dich verstecken kannst! <br/> <br/>";
         // Überprüft, ob überhaupt Geld im Inventar ist
         if (!((new RegExp(" Euro")).test(inventory[0].name))) {
             gameWinText = gameWinText + "Leider hast du kein Geld erbeutet.";
@@ -326,13 +326,13 @@ namespace textAdventure {
             if (money === 40000)
                 gameWinText = gameWinText + "In der Garage befindet sich dein Komplize Jonny mit dem Fluchtfahrzeug. Ihr kommt ungesehen aus der Stadt und flüchtet nach Russland. Du lässt dein kriminelles Leben hinter dir und beginnst ein neues Leben auf einer Insel im pazifischen Ozean.";
             else if (money > 39000)
-                gameWinText = gameWinText + "Du schnappst dir ein Fahrad aus der Garage und flüchtest aus der Stadt zu deiner Familie. Du kannst ihr mit dem Geld nun endlich das Leben ermöglichen, das du immer wolltest.";
+                gameWinText = gameWinText + "Du schnappst dir ein Fahrrad aus der Garage und flüchtest aus der Stadt zu deiner Familie. Du kannst ihr mit dem Geld nun endlich das Leben ermöglichen, das du immer wolltest.";
             else if (money > 30000)
-                gameWinText = gameWinText + "Du ziehst dich in der Garage um und flüchtest unbemerkt durch die Hintertür. Du lebst dein Leben normal in einer entfernet Stadt wieiter. Fünf Jahre später wurde der Fall neu aufgerollt. Durch deine DNA-Spuren an der Kleidung konntest du überführt werden. Es drohen dir nun 5 Jahre Haft.";
+                gameWinText = gameWinText + "Du ziehst dich in der Garage um und flüchtest unbemerkt durch die Hintertür. Du lebst dein Leben normal in einer entfernten Stadt weiter. Fünf Jahre später wurde der Fall neu aufgerollt. Durch deine DNA-Spuren an der Kleidung konntest du überführt werden. Es drohen dir nun 5 Jahre Haft.";
             else if (money > 21000)
-                gameWinText = gameWinText + "Du flüchtest erfolgreich mit einem kleinen VW-Polo aus der Stadt. du bist überwältigt, wie schnell du eine Bank überfallen hast. In deinem Kopf planst du bereits den nächsten Überfall auf die Zentralbank.";
+                gameWinText = gameWinText + "Du flüchtest erfolgreich mit einem kleinen VW-Polo aus der Stadt. Du bist überwältigt, wie schnell du eine Bank überfallen hast. In deinem Kopf planst du bereits den nächsten Überfall auf die Zentralbank.";
             else if (money >= 20000)
-                gameWinText = gameWinText + "Mit einem Fluchfahrzeug in der Garage fährst du direkt ins nächstgelegene Casino. Innerhalb von 24 Stunden hast du dein komplettes Geld verspielt, woraufhin du neue Überfälle planst.";
+                gameWinText = gameWinText + "Mit einem Fluchtfahrzeug in der Garage fährst du direkt ins nächstgelegene Casino. Innerhalb von 24 Stunden hast du dein komplettes Geld verspielt, woraufhin du neue Überfälle planst.";
             else if (money > 5000)
                 gameWinText = gameWinText + "Du hast die Beute der Bank unterwegs abgelegt. Die Polizei fand daran Fingerabdrücke und konnte dich mit Hilfe eines Phantombildes identifizieren. Du wurdest zu 7 Jahren Haft verurteilt.";
             else if (money > 0)
@@ -370,7 +370,7 @@ namespace textAdventure {
     * 
     * @return: string | Lebenszustand des Spielers
     */
-    function showlife(): string {
+    function showLife(): string {
         return "Dein aktueller Gesundheitszustand ist: " + health + "%";
     }
 
