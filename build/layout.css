@@ -1,13 +1,27 @@
 .grid-container {
-	height: 100vh;
+	height: 90vh;
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr 1fr 1fr;
+	grid-template-columns: 1fr 0.8fr;
+	grid-template-rows: 1fr 1fr 1fr;
 	grid-template-areas:
-		"console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area"
-		"console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area"
-		"console-Area   console-Area    console-Area    cityPlan-Area   cityPlan-Area"
-		"userInput-Area userInput-Area  userInput-Area  cityPlan-Area   cityPlan-Area";
+		"console-Area	cityPlan-Area"
+		"console-Area   cityPlan-Area"
+		"console-Area   cityPlan-Area"
+		"userInput-Area cityPlan-Area";
+}
+
+@media only screen and (max-width: 1050px) {
+	.grid-container {
+		grid-template-columns: 1fr;
+		grid-template-rows: 0fr 0.5fr 0.07fr;
+		grid-template-areas:
+			"cityPlan-Area"
+			"console-Area "
+			"userInput-Area";
+	}
+	.console-Area {
+		height: 200px;
+	}
 }
 
 .console-Area {
@@ -19,7 +33,6 @@
 	border-width: 2px;
 	padding: 5px;
 	margin: 10px;
-	
 }
 
 .cityPlan-Area {
@@ -33,6 +46,7 @@
 .input-field {
 	display: block;
 	margin: 0 auto;
+	margin-bottom: 10px;
 	width: 80%;
 	background-color: #dddddd;
 }
